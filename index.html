@@ -11,7 +11,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Changed to min-height so it scrolls better on small screens */
+            min-height: 100vh;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
@@ -41,7 +41,6 @@
             font-weight: bold;
         }
 
-        /* The inputs have been updated to prevent zooming */
         input[type="text"],
         input[type="tel"],
         textarea {
@@ -52,17 +51,17 @@
             border-radius: 5px;
             box-sizing: border-box;
             font-family: Arial, sans-serif;
-            font-size: 16px; /* MUST be 16px or larger to stop iPhone auto-zoom */
+            font-size: 16px;
         }
 
         button {
             width: 100%;
-            padding: 12px; /* Made the button slightly taller for easier tapping on phones */
+            padding: 12px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 16px; /* Matches the inputs */
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s ease;
@@ -98,16 +97,16 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbz9xyL21qptfFmlvOKEMPMuTiH3gsIjS2jprTqLDeaxKiGvyujcLMBbkhBl4JzKi6TZAQ/exec';
+        // Your NEW Web App link is plugged in here
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwGoMEpV5NTiT4Blywk1uDOqRJ0FJ-u4GmyWv9g-K174JW3mcouO9tCq7DAtABnQZpT9A/exec';
         const form = document.forms['google-sheet-form'];
 
         form.addEventListener('submit', e => {
             e.preventDefault(); 
             
             const userName = document.getElementById('name').value;
-            
-            // Disables the button and changes text so they don't double-click it while it sends
             const submitButton = form.querySelector('button[type="submit"]');
+            
             submitButton.disabled = true;
             submitButton.innerText = "Sending...";
             
@@ -115,8 +114,6 @@
                 .then(response => {
                     alert("Terima Kasih " + userName + "!");
                     form.reset(); 
-                    
-                    // Turns the button back on after sending
                     submitButton.disabled = false;
                     submitButton.innerText = "Submit Details";
                 })
