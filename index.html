@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Maklumat Pendaki Aki-Aki trail</title>
     <style>
         body {
@@ -11,7 +11,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh; /* Changed to min-height so it scrolls better on small screens */
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
@@ -41,6 +41,7 @@
             font-weight: bold;
         }
 
+        /* The inputs have been updated to prevent zooming */
         input[type="text"],
         input[type="tel"],
         textarea {
@@ -51,16 +52,18 @@
             border-radius: 5px;
             box-sizing: border-box;
             font-family: Arial, sans-serif;
+            font-size: 16px; /* MUST be 16px or larger to stop iPhone auto-zoom */
         }
 
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px; /* Made the button slightly taller for easier tapping on phones */
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 1rem;
+            font-size: 16px; /* Matches the inputs */
+            font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -101,16 +104,27 @@
         form.addEventListener('submit', e => {
             e.preventDefault(); 
             
-            // Grabs the name they typed in the box before it sends
             const userName = document.getElementById('name').value;
+            
+            // Disables the button and changes text so they don't double-click it while it sends
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerText = "Sending...";
             
             fetch(scriptURL, { method: 'POST', body: new FormData(form), mode: 'no-cors'})
                 .then(response => {
-                    // Uses their name in the pop-up alert
                     alert("Terima Kasih " + userName + "!");
                     form.reset(); 
+                    
+                    // Turns the button back on after sending
+                    submitButton.disabled = false;
+                    submitButton.innerText = "Submit Details";
                 })
-                .catch(error => console.error('Error!', error.message));
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    submitButton.disabled = false;
+                    submitButton.innerText = "Submit Details";
+                });
         });
     </script>
 
