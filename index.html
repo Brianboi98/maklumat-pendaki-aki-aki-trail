@@ -51,6 +51,7 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
             font-size: 16px;
+            text-transform: uppercase; /* Forces text to display as uppercase while typing */
         }
 
         .phone-wrapper {
@@ -108,10 +109,10 @@
         <form name="google-sheet-form">
             
             <label for="name">FULL NAME</label>
-            <input type="text" id="name" name="Nama Penuh" placeholder="e.g. Ali bin Abu" required>
+            <input type="text" id="name" name="Nama Penuh" placeholder="E.G. ALI BIN ABU" required>
             
             <label for="ic_passport">IC no. / Passport</label>
-            <input type="text" id="ic_passport" name="IC/passport" placeholder="e.g. 900101-12-3456" required>
+            <input type="text" id="ic_passport" name="IC/passport" placeholder="E.G. 900101-12-3456" required>
             
             <label for="phone">Phone Number</label>
             <div class="phone-wrapper">
@@ -120,8 +121,7 @@
             </div>
             
             <label for="alamat">Alamat</label>
-            <!-- Pre-filled "Keningau" goes right here inside the textarea tags -->
-            <textarea id="alamat" name="Alamat" rows="3" placeholder="Enter full address..." required>Keningau</textarea>
+            <textarea id="alamat" name="Alamat" rows="3" placeholder="ENTER FULL ADDRESS..." required>KENINGAU</textarea>
             
             <button type="submit">Submit Details</button>
             
@@ -135,13 +135,19 @@
         form.addEventListener('submit', e => {
             e.preventDefault(); 
             
-            const userName = document.getElementById('name').value;
+            // Grabs the name and ensures the pop-up alert is also in uppercase
+            const userName = document.getElementById('name').value.toUpperCase();
             const submitButton = form.querySelector('button[type="submit"]');
             
             submitButton.disabled = true;
             submitButton.innerText = "Sending...";
 
             const formData = new FormData(form);
+            
+            // Converts the form data to uppercase right before sending it to Google Sheets
+            formData.set('Nama Penuh', formData.get('Nama Penuh').toUpperCase());
+            formData.set('IC/passport', formData.get('IC/passport').toUpperCase());
+            formData.set('Alamat', formData.get('Alamat').toUpperCase());
             
             const rawPhone = formData.get('Nombor Telefon');
             formData.set('Nombor Telefon', '+60' + rawPhone);
@@ -151,8 +157,7 @@
                     alert("Terima Kasih " + userName + "!");
                     form.reset(); 
                     
-                    // After the form resets, this line ensures "Keningau" is placed back into the box for the next person
-                    document.getElementById('alamat').value = "Keningau"; 
+                    document.getElementById('alamat').value = "KENINGAU"; 
                     
                     submitButton.disabled = false;
                     submitButton.innerText = "Submit Details";
