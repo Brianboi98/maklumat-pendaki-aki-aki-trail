@@ -793,14 +793,15 @@
     const ic = formData.get('IC/passport') || '';
     if (ic.trim() === '') formData.set('IC/passport', 'ISI KEMUDIAN');
 
-    // Phone prefix logic - Improved to strip leading zeroes if user typed them
+    // Phone prefix logic - Fixed for Google Sheets formula error
     let phone = formData.get('No Telefon') || '';
     phone = phone.trim();
     if (phone !== '') {
       if (phone.startsWith('0')) {
         phone = phone.substring(1);
       }
-      formData.set('No Telefon', '+60' + phone);
+      // Add a single quote before the + so Google Sheets forces it to plain text
+      formData.set('No Telefon', "'+60" + phone);
     }
 
     fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' })
