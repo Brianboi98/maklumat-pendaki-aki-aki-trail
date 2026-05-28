@@ -41,7 +41,6 @@
             font-weight: bold;
         }
         
-        /* Added a style for the optional text */
         .optional-text {
             font-size: 0.85em;
             font-weight: normal;
@@ -106,6 +105,45 @@
         button:hover {
             background-color: #0056b3;
         }
+
+        /* --- Custom Modal Box Styles --- */
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center; 
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            width: 80%;
+        }
+
+        .modal-box h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.4rem;
+        }
+
+        .modal-btn {
+            margin-top: 20px;
+            background-color: #28a745;
+        }
+
+        .modal-btn:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -118,7 +156,6 @@
             <label for="name">FULL NAME</label>
             <input type="text" id="name" name="Nama Penuh" placeholder="E.G. ALI BIN ABU" required>
             
-            <!-- Added the optional text and removed the 'required' tag at the end -->
             <label for="ic_passport">IC no. / Passport <span class="optional-text">(Boleh isi kemudian)</span></label>
             <input type="text" id="ic_passport" name="IC/passport" placeholder="E.G. 900101-12-3456">
             
@@ -136,9 +173,24 @@
         </form>
     </div>
 
+    <!-- --- Custom Success Box --- -->
+    <div class="modal-overlay" id="success-modal">
+        <div class="modal-box">
+            <h3 id="modal-message">Terima Kasih!</h3>
+            <button class="modal-btn" onclick="closeModal()">Tutup</button>
+        </div>
+    </div>
+
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwGoMEpV5NTiT4Blywk1uDOqRJ0FJ-u4GmyWv9g-K174JW3mcouO9tCq7DAtABnQZpT9A/exec';
         const form = document.forms['google-sheet-form'];
+        
+        const submitAudio = new Audio('https://raw.githubusercontent.com/Brianboi98/maklumat-pendaki-aki-aki-trail/refs/heads/main/ElevenLabs_2026-05-28T14_33_50_Amelia%20-%20young%20and%20enthusiastic_pvc_sp100_s50_sb48_se0_m2.mp3');
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('success-modal').style.display = 'none';
+        }
 
         form.addEventListener('submit', e => {
             e.preventDefault(); 
@@ -151,11 +203,9 @@
 
             const formData = new FormData(form);
             
-            // Format the Name and Alamat to uppercase
             formData.set('Nama Penuh', formData.get('Nama Penuh').toUpperCase());
             formData.set('Alamat', formData.get('Alamat').toUpperCase());
             
-            // Safely check if IC is filled. If blank, send "ISI KEMUDIAN" to the sheet.
             const rawIC = formData.get('IC/passport');
             if (rawIC.trim() === "") {
                 formData.set('IC/passport', 'ISI KEMUDIAN');
@@ -168,9 +218,15 @@
             
             fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors'})
                 .then(response => {
-                    alert("Terima Kasih " + userName + "!");
-                    form.reset(); 
+                    // --- Play Audio and Show Custom Box Simultaneously ---
+                    submitAudio.play().catch(error => {
+                        console.error('Audio playback failed:', error);
+                    });
                     
+                    document.getElementById('modal-message').innerText = "Terima Kasih " + userName + "!";
+                    document.getElementById('success-modal').style.display = "flex";
+                    
+                    form.reset(); 
                     document.getElementById('alamat').value = "KENINGAU"; 
                     
                     submitButton.disabled = false;
