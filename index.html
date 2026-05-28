@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maklumat Pendaki Aki-Aki trail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333333;
+            text-align: center;
+            font-size: 1.5rem;
+            line-height: 1.3;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555555;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <!-- Form header updated here -->
+        <h2>Maklumat Pendaki Aki-Aki trail</h2>
+        
+        <form name="google-sheet-form">
+            
+            <label for="name">FULL NAME</label>
+            <input type="text" id="name" name="Nama Penuh" placeholder="e.g. Ali bin Abu" required>
+            
+            <label for="ic_passport">IC no. / Passport</label>
+            <input type="text" id="ic_passport" name="IC/passport" placeholder="e.g. 900101-12-3456" required>
+            
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="Nombor Telefon" placeholder="e.g. 012-3456789" required>
+            
+            <label for="alamat">Alamat</label>
+            <textarea id="alamat" name="Alamat" rows="3" placeholder="Enter full address..." required></textarea>
+            
+            <button type="submit">Submit Details</button>
+            
+        </form>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbz9xyL21qptfFmlvOKEMPMuTiH3gsIjS2jprTqLDeaxKiGvyujcLMBbkhBl4JzKi6TZAQ/exec';
+        const form = document.forms['google-sheet-form'];
+
+        form.addEventListener('submit', e => {
+            e.preventDefault(); 
+            
+            fetch(scriptURL, { method: 'POST', body: new FormData(form), mode: 'no-cors'})
+                .then(response => {
+                    alert("Success! Your details have been saved to the sheet.");
+                    form.reset(); 
+                })
+                .catch(error => console.error('Error!', error.message));
+        });
+    </script>
+
+</body>
+</html>
