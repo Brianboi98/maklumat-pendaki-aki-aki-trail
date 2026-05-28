@@ -42,7 +42,6 @@
         }
 
         input[type="text"],
-        input[type="tel"],
         textarea {
             width: 100%;
             padding: 10px;
@@ -52,6 +51,37 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
             font-size: 16px;
+        }
+
+        /* New styles for the phone number wrapper to hold the +60 */
+        .phone-wrapper {
+            display: flex;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .phone-prefix {
+            background-color: #eeeeee;
+            border: 1px solid #cccccc;
+            border-right: none;
+            padding: 10px;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+            color: #555555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Adjusts the phone input to attach seamlessly to the prefix box */
+        .phone-wrapper input[type="tel"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 0 5px 5px 0;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            box-sizing: border-box;
         }
 
         button {
@@ -86,7 +116,11 @@
             <input type="text" id="ic_passport" name="IC/passport" placeholder="e.g. 900101-12-3456" required>
             
             <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="Nombor Telefon" placeholder="e.g. 012-3456789" required>
+            <!-- The new phone wrapper with the fixed +60 code -->
+            <div class="phone-wrapper">
+                <span class="phone-prefix">+60</span>
+                <input type="tel" id="phone" name="Nombor Telefon" placeholder="123456789" required>
+            </div>
             
             <label for="alamat">Alamat</label>
             <textarea id="alamat" name="Alamat" rows="3" placeholder="Enter full address..." required></textarea>
@@ -97,7 +131,6 @@
     </div>
 
     <script>
-        // Your NEW Web App link is plugged in here
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwGoMEpV5NTiT4Blywk1uDOqRJ0FJ-u4GmyWv9g-K174JW3mcouO9tCq7DAtABnQZpT9A/exec';
         const form = document.forms['google-sheet-form'];
 
@@ -109,8 +142,15 @@
             
             submitButton.disabled = true;
             submitButton.innerText = "Sending...";
+
+            // Create the form data package
+            const formData = new FormData(form);
             
-            fetch(scriptURL, { method: 'POST', body: new FormData(form), mode: 'no-cors'})
+            // Grab the raw phone number and attach the +60 to the front before sending
+            const rawPhone = formData.get('Nombor Telefon');
+            formData.set('Nombor Telefon', '+60' + rawPhone);
+            
+            fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors'})
                 .then(response => {
                     alert("Terima Kasih " + userName + "!");
                     form.reset(); 
