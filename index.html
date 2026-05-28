@@ -1,244 +1,652 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Maklumat Pendaki Aki-Aki trail</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maklumat Pendaki · Aki-Aki Trail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Jost:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
 
-        .form-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        h2 {
-            margin-top: 0;
-            color: #333333;
-            text-align: center;
-            font-size: 1.5rem;
-            line-height: 1.3;
-        }
+    :root {
+      --forest:   #0d2218;
+      --pine:     #163a28;
+      --moss:     #2a5c40;
+      --sage:     #4c8c67;
+      --mist:     #a8c5b4;
+      --gold:     #c8a96e;
+      --gold-lt:  #e0c88e;
+      --cream:    #f5ede0;
+      --white:    #fdfaf6;
+      --err:      #e07070;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555555;
-            font-weight: bold;
-        }
-        
-        .optional-text {
-            font-size: 0.85em;
-            font-weight: normal;
-            color: #888888;
-        }
+    html { scroll-behavior: smooth; }
 
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #cccccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            text-transform: uppercase; 
-        }
+    body {
+      font-family: 'Jost', sans-serif;
+      background-color: var(--forest);
+      color: var(--cream);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-        .phone-wrapper {
-            display: flex;
-            margin-bottom: 15px;
-            width: 100%;
-        }
+    /* ─── HERO ─────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 38vh;
+      min-height: 240px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 2.5rem;
+    }
 
-        .phone-prefix {
-            background-color: #eeeeee;
-            border: 1px solid #cccccc;
-            border-right: none;
-            padding: 10px;
-            border-radius: 5px 0 0 5px;
-            font-size: 16px;
-            color: #555555;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    /* SVG mountain silhouette */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(175deg, #050f09 0%, #0d2218 45%, #163a28 100%);
+    }
 
-        .phone-wrapper input[type="tel"] {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #cccccc;
-            border-radius: 0 5px 5px 0;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
+    .hero-stars {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 20% 15%, rgba(200,169,110,.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 8%,  rgba(200,169,110,.4) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 78% 20%, rgba(168,197,180,.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 35% 30%,  rgba(200,169,110,.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 12%,  rgba(168,197,180,.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 40%,  rgba(255,255,255,.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 63% 25%,  rgba(255,255,255,.15) 0%, transparent 100%);
+    }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    .hero-mountains {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    .hero-glow {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 340px;
+      height: 120px;
+      background: radial-gradient(ellipse, rgba(200,169,110,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
 
-        /* --- Custom Modal Box Styles --- */
-        .modal-overlay {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center; 
-            align-items: center;
-            z-index: 1000;
-        }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
 
-        .modal-box {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            max-width: 300px;
-            width: 80%;
-        }
+    .hero-badge {
+      display: inline-block;
+      font-family: 'Jost', sans-serif;
+      font-size: .65rem;
+      font-weight: 500;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(200,169,110,.35);
+      padding: .35rem .9rem;
+      border-radius: 50px;
+      margin-bottom: .85rem;
+      backdrop-filter: blur(6px);
+      background: rgba(13,34,24,.4);
+      animation: fadeUp .8s ease both;
+    }
 
-        .modal-box h3 {
-            margin-top: 0;
-            color: #333;
-            font-size: 1.4rem;
-        }
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.6rem, 5vw, 2.6rem);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: .04em;
+      line-height: 1.15;
+      text-shadow: 0 2px 18px rgba(0,0,0,.5);
+      animation: fadeUp .8s .1s ease both;
+    }
 
-        .modal-btn {
-            margin-top: 20px;
-            background-color: #28a745;
-        }
+    .hero-title span {
+      color: var(--gold);
+    }
 
-        .modal-btn:hover {
-            background-color: #218838;
-        }
-    </style>
+    /* ─── MAIN LAYOUT ─────────────────────── */
+    .wrapper {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 1.25rem 4rem;
+    }
+
+    /* ─── CARD ────────────────────────────── */
+    .card {
+      background: linear-gradient(145deg, rgba(26,58,40,.85) 0%, rgba(13,34,24,.9) 100%);
+      border: 1px solid rgba(200,169,110,.18);
+      border-radius: 20px;
+      padding: 2.2rem 2rem;
+      box-shadow:
+        0 8px 40px rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(200,169,110,.12);
+      backdrop-filter: blur(12px);
+      animation: fadeUp .7s .25s ease both;
+      margin-top: -2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.8rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid rgba(200,169,110,.15);
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--moss), var(--pine));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+      flex-shrink: 0;
+    }
+
+    .card-header h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: .06em;
+      line-height: 1.3;
+    }
+
+    .card-header p {
+      font-size: .75rem;
+      color: var(--mist);
+      letter-spacing: .04em;
+      margin-top: .1rem;
+    }
+
+    /* ─── FORM ELEMENTS ───────────────────── */
+    .field {
+      margin-bottom: 1.3rem;
+      animation: fadeUp .6s ease both;
+    }
+
+    .field:nth-child(1) { animation-delay: .3s; }
+    .field:nth-child(2) { animation-delay: .38s; }
+    .field:nth-child(3) { animation-delay: .46s; }
+    .field:nth-child(4) { animation-delay: .54s; }
+
+    label {
+      display: block;
+      font-size: .7rem;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--mist);
+      margin-bottom: .5rem;
+    }
+
+    .optional-text {
+      font-size: .65em;
+      font-weight: 400;
+      letter-spacing: .06em;
+      text-transform: none;
+      color: var(--sage);
+      font-style: italic;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: .9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: .9rem;
+      pointer-events: none;
+      opacity: .55;
+    }
+
+    input, select {
+      width: 100%;
+      background: rgba(13,34,24,.6);
+      border: 1px solid rgba(200,169,110,.2);
+      border-radius: 10px;
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: .9rem;
+      font-weight: 300;
+      letter-spacing: .03em;
+      padding: .8rem 1rem .8rem 2.5rem;
+      transition: border-color .25s, box-shadow .25s, background .25s;
+      outline: none;
+      appearance: none;
+    }
+
+    input::placeholder { color: rgba(168,197,180,.35); }
+
+    input:focus, select:focus {
+      border-color: rgba(200,169,110,.55);
+      box-shadow: 0 0 0 3px rgba(200,169,110,.1);
+      background: rgba(22,58,40,.7);
+    }
+
+    input:valid:not(:placeholder-shown) {
+      border-color: rgba(76,140,103,.5);
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: .9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: .5;
+      font-size: .7rem;
+    }
+
+    select option {
+      background: var(--pine);
+      color: var(--cream);
+    }
+
+    /* ─── DIVIDER ─────────────────────────── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin: 1.5rem 0;
+      opacity: .4;
+    }
+    .divider-line { flex: 1; height: 1px; background: var(--gold); }
+    .divider-dot  { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    /* ─── BUTTON ──────────────────────────── */
+    .btn-submit {
+      width: 100%;
+      padding: .95rem 1.5rem;
+      background: linear-gradient(135deg, var(--gold) 0%, #b8922e 100%);
+      color: var(--forest);
+      font-family: 'Cinzel', serif;
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s, opacity .2s;
+      box-shadow: 0 4px 20px rgba(200,169,110,.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+      animation: fadeUp .6s .62s ease both;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(200,169,110,.5);
+    }
+
+    .btn-submit:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-submit:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .btn-icon { font-size: 1rem; }
+
+    .btn-loader {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(13,34,24,.3);
+      border-top-color: var(--forest);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    .btn-submit.loading .btn-text  { display: none; }
+    .btn-submit.loading .btn-icon  { display: none; }
+    .btn-submit.loading .btn-loader { display: block; }
+
+    /* ─── FOOTER NOTE ─────────────────────── */
+    .form-note {
+      text-align: center;
+      font-size: .68rem;
+      color: var(--sage);
+      margin-top: 1rem;
+      letter-spacing: .04em;
+      animation: fadeUp .6s .7s ease both;
+    }
+
+    /* ─── MODAL ───────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5,15,9,.75);
+      backdrop-filter: blur(6px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.visible {
+      display: flex;
+      animation: backdropIn .3s ease;
+    }
+
+    .modal-box {
+      background: linear-gradient(145deg, #1a3a28, #0d2218);
+      border: 1px solid rgba(200,169,110,.3);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 1px 0 rgba(200,169,110,.15);
+      max-width: 340px;
+      width: 100%;
+      animation: modalIn .4s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    .modal-checkmark {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--moss), var(--sage));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 1.25rem;
+      box-shadow: 0 8px 24px rgba(76,140,103,.4);
+      animation: popIn .5s .2s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    .modal-box h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: .6rem;
+      letter-spacing: .06em;
+    }
+
+    .modal-box p {
+      font-size: .82rem;
+      color: var(--mist);
+      line-height: 1.6;
+      font-weight: 300;
+      letter-spacing: .03em;
+    }
+
+    .modal-divider {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      opacity: .4;
+      margin: 1.2rem auto;
+    }
+
+    .modal-btn {
+      margin-top: 1.5rem;
+      padding: .8rem 2.5rem;
+      background: linear-gradient(135deg, var(--gold), #b8922e);
+      color: var(--forest);
+      font-family: 'Cinzel', serif;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 16px rgba(200,169,110,.35);
+    }
+
+    .modal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(200,169,110,.5);
+    }
+
+    /* ─── KEYFRAMES ───────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes backdropIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(.85) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ─── RESPONSIVE ──────────────────────── */
+    @media (max-width: 480px) {
+      .card { padding: 1.75rem 1.25rem; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="form-container">
-        <h2>Maklumat Pendaki Aki-Aki trail</h2>
-        
-        <form name="google-sheet-form">
-            
-            <label for="name">FULL NAME</label>
-            <input type="text" id="name" name="Nama Penuh" placeholder="E.G. ALI BIN ABU" required>
-            
-            <label for="ic_passport">IC no. / Passport <span class="optional-text">(Boleh isi kemudian)</span></label>
-            <input type="text" id="ic_passport" name="IC/passport" placeholder="E.G. 900101-12-3456">
-            
-            <label for="phone">Phone Number</label>
-            <div class="phone-wrapper">
-                <span class="phone-prefix">+60</span>
-                <input type="tel" id="phone" name="Nombor Telefon" placeholder="123456789" required>
-            </div>
-            
-            <label for="alamat">Alamat</label>
-            <textarea id="alamat" name="Alamat" rows="3" placeholder="ENTER FULL ADDRESS..." required>KENINGAU</textarea>
-            
-            <button type="submit">Submit Details</button>
-            
-        </form>
-    </div>
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-stars"></div>
+    <div class="hero-glow"></div>
 
-    <!-- --- Custom Success Box --- -->
-    <div class="modal-overlay" id="success-modal">
-        <div class="modal-box">
-            <h3 id="modal-message">Terima Kasih!</h3>
-            <button class="modal-btn" onclick="closeModal()">Tutup</button>
+    <!-- SVG Mountain Silhouette -->
+    <svg class="hero-mountains" viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <!-- Far mountains -->
+      <path d="M0,200 L120,80 L260,140 L400,60 L540,130 L680,50 L820,120 L960,70 L1080,110 L1200,80 L1200,200 Z"
+            fill="rgba(22,58,40,0.55)"/>
+      <!-- Mid mountains -->
+      <path d="M0,200 L80,120 L200,160 L340,90 L480,155 L600,75 L740,140 L880,95 L1000,145 L1100,100 L1200,130 L1200,200 Z"
+            fill="rgba(26,62,42,0.7)"/>
+      <!-- Near silhouette -->
+      <path d="M0,200 L0,170 L60,155 L160,175 L280,130 L420,165 L520,115 L620,160 L720,110 L840,150 L940,120 L1060,155 L1150,135 L1200,145 L1200,200 Z"
+            fill="rgba(13,34,24,0.95)"/>
+      <!-- Trees suggestion -->
+      <path d="M0,200 L0,185 L30,185 L45,165 L60,185 L90,185 L108,158 L126,185 L160,185 L178,162 L196,185 L230,185 L250,170 L270,185 L320,185 L345,155 L370,185 L430,185 L448,168 L466,185 L510,185 L528,160 L546,185 L590,185 L615,150 L640,185 L700,185 L720,162 L740,185 L790,185 L810,158 L830,185 L880,185 L900,165 L920,185 L960,185 L980,155 L1000,185 L1060,185 L1080,168 L1100,185 L1150,185 L1175,160 L1200,185 L1200,200 Z"
+            fill="#0d2218"/>
+    </svg>
+
+    <div class="hero-content">
+      <div class="hero-badge">Sabah, Malaysia</div>
+      <h1 class="hero-title">Aki-Aki <span>Trail</span></h1>
+    </div>
+  </div>
+
+  <!-- ── FORM WRAPPER ── -->
+  <div class="wrapper">
+    <div class="card">
+
+      <div class="card-header">
+        <div class="card-icon">⛰️</div>
+        <div>
+          <h2>Pendaftaran Pendaki</h2>
+          <p>Sila isi maklumat dengan lengkap dan betul</p>
         </div>
+      </div>
+
+      <form name="google-sheet-form" novalidate>
+
+        <!-- Full Name -->
+        <div class="field">
+          <label for="name">Nama Penuh</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="name" name="Nama Penuh"
+                   placeholder="Cth. ALI BIN ABU" required autocomplete="name"/>
+          </div>
+        </div>
+
+        <!-- IC / Passport -->
+        <div class="field">
+          <label for="ic_passport">
+            No. IC / Passport
+            <span class="optional-text">(Boleh isi kemudian)</span>
+          </label>
+          <div class="input-wrap">
+            <span class="input-icon">🪪</span>
+            <input type="text" id="ic_passport" name="IC/passport"
+                   placeholder="Cth. 900101-12-3456" autocomplete="off"/>
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="field">
+          <label for="phone">No. Telefon</label>
+          <div class="input-wrap">
+            <span class="input-icon">📱</span>
+            <input type="tel" id="phone" name="No Telefon"
+                   placeholder="Cth. 012-3456789" autocomplete="tel"/>
+          </div>
+        </div>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-dot"></div>
+          <div class="divider-line"></div>
+        </div>
+
+        <!-- Alamat -->
+        <div class="field">
+          <label for="alamat">Alamat / Kawasan</label>
+          <div class="input-wrap">
+            <span class="input-icon">📍</span>
+            <input type="text" id="alamat" name="Alamat"
+                   value="KENINGAU" placeholder="Cth. KENINGAU" required/>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit" id="submit-btn">
+          <span class="btn-icon">🏔️</span>
+          <span class="btn-text">Daftar Sekarang</span>
+          <div class="btn-loader"></div>
+        </button>
+
+      </form>
+
+      <p class="form-note">🔒 Maklumat anda disimpan dengan selamat</p>
     </div>
+  </div>
 
-    <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwGoMEpV5NTiT4Blywk1uDOqRJ0FJ-u4GmyWv9g-K174JW3mcouO9tCq7DAtABnQZpT9A/exec';
-        const form = document.forms['google-sheet-form'];
-        
-        const submitAudio = new Audio('https://raw.githubusercontent.com/Brianboi98/maklumat-pendaki-aki-aki-trail/refs/heads/main/ElevenLabs_2026-05-28T14_33_50_Amelia%20-%20young%20and%20enthusiastic_pvc_sp100_s50_sb48_se0_m2.mp3');
+  <!-- ── SUCCESS MODAL ── -->
+  <div class="modal-overlay" id="success-modal">
+    <div class="modal-box">
+      <div class="modal-checkmark">✓</div>
+      <h3 id="modal-message">Terima Kasih!</h3>
+      <div class="modal-divider"></div>
+      <p>Pendaftaran anda telah berjaya direkodkan. Selamat mendaki dan berhati-hati di laluan!</p>
+      <button class="modal-btn" onclick="closeModal()">Tutup</button>
+    </div>
+  </div>
 
-        // Function to close the modal
-        function closeModal() {
-            document.getElementById('success-modal').style.display = 'none';
-        }
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwGoMEpV5NTiT4Blywk1uDOqRJ0FJ-u4GmyWv9g-K174JW3mcouO9tCq7DAtABnQZpT9A/exec';
+    const form = document.forms['google-sheet-form'];
+    const submitBtn = document.getElementById('submit-btn');
 
-        form.addEventListener('submit', e => {
-            e.preventDefault(); 
-            
-            const userName = document.getElementById('name').value.toUpperCase();
-            const submitButton = form.querySelector('button[type="submit"]');
-            
-            submitButton.disabled = true;
-            submitButton.innerText = "Sending...";
+    const submitAudio = new Audio('https://raw.githubusercontent.com/Brianboi98/maklumat-pendaki-aki-aki-trail/refs/heads/main/ElevenLabs_2026-05-28T14_33_50_Amelia%20-%20young%20and%20enthusiastic_pvc_sp100_s50_sb48_se0_m2.mp3');
 
-            const formData = new FormData(form);
-            
-            formData.set('Nama Penuh', formData.get('Nama Penuh').toUpperCase());
-            formData.set('Alamat', formData.get('Alamat').toUpperCase());
-            
-            const rawIC = formData.get('IC/passport');
-            if (rawIC.trim() === "") {
-                formData.set('IC/passport', 'ISI KEMUDIAN');
-            } else {
-                formData.set('IC/passport', rawIC.toUpperCase());
-            }
-            
-            const rawPhone = formData.get('Nombor Telefon');
-            formData.set('Nombor Telefon', '+60' + rawPhone);
-            
-            fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors'})
-                .then(response => {
-                    // --- Play Audio and Show Custom Box Simultaneously ---
-                    submitAudio.play().catch(error => {
-                        console.error('Audio playback failed:', error);
-                    });
-                    
-                    document.getElementById('modal-message').innerText = "Terima Kasih " + userName + "!";
-                    document.getElementById('success-modal').style.display = "flex";
-                    
-                    form.reset(); 
-                    document.getElementById('alamat').value = "KENINGAU"; 
-                    
-                    submitButton.disabled = false;
-                    submitButton.innerText = "Submit Details";
-                })
-                .catch(error => {
-                    console.error('Error!', error.message);
-                    submitButton.disabled = false;
-                    submitButton.innerText = "Submit Details";
-                });
+    function closeModal() {
+      document.getElementById('success-modal').classList.remove('visible');
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const nameVal = document.getElementById('name').value.trim();
+      if (!nameVal) {
+        document.getElementById('name').focus();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+
+      const userName = nameVal;
+      const formData = new FormData(form);
+
+      // Uppercase name & address
+      formData.set('Nama Penuh', formData.get('Nama Penuh').toUpperCase());
+      formData.set('Alamat',     formData.get('Alamat').toUpperCase());
+
+      // IC fallback
+      const rawIC = formData.get('IC/passport');
+      if (rawIC && rawIC.trim() === '') {
+        formData.set('IC/passport', 'ISI KEMUDIAN');
+      }
+
+      fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
+        .then(() => {
+          // Play audio
+          submitAudio.play().catch(err => console.warn('Audio:', err));
+
+          // Show modal
+          document.getElementById('modal-message').innerText = 'Terima Kasih, ' + userName + '!';
+          document.getElementById('success-modal').classList.add('visible');
+
+          // Reset form
+          form.reset();
+          document.getElementById('alamat').value = 'KENINGAU';
+
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('loading');
+        })
+        .catch(() => {
+          alert('Ralat: Sila cuba semula.');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('loading');
         });
-    </script>
+    });
 
+    // Close modal on backdrop click
+    document.getElementById('success-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+  </script>
 </body>
 </html>
