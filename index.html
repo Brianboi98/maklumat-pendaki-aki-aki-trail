@@ -73,7 +73,6 @@
 <body>
 
     <div class="form-container">
-        <!-- Form header updated here -->
         <h2>Maklumat Pendaki Aki-Aki trail</h2>
         
         <form name="google-sheet-form">
@@ -102,9 +101,13 @@
         form.addEventListener('submit', e => {
             e.preventDefault(); 
             
+            // Grabs the name they typed in the box before it sends
+            const userName = document.getElementById('name').value;
+            
             fetch(scriptURL, { method: 'POST', body: new FormData(form), mode: 'no-cors'})
                 .then(response => {
-                    alert("Success! Your details have been saved to the sheet.");
+                    // Uses their name in the pop-up alert
+                    alert("Terima Kasih " + userName + "!");
                     form.reset(); 
                 })
                 .catch(error => console.error('Error!', error.message));
