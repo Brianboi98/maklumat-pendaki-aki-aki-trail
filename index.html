@@ -53,7 +53,6 @@
             font-size: 16px;
         }
 
-        /* New styles for the phone number wrapper to hold the +60 */
         .phone-wrapper {
             display: flex;
             margin-bottom: 15px;
@@ -73,7 +72,6 @@
             justify-content: center;
         }
 
-        /* Adjusts the phone input to attach seamlessly to the prefix box */
         .phone-wrapper input[type="tel"] {
             flex: 1;
             padding: 10px;
@@ -116,14 +114,14 @@
             <input type="text" id="ic_passport" name="IC/passport" placeholder="e.g. 900101-12-3456" required>
             
             <label for="phone">Phone Number</label>
-            <!-- The new phone wrapper with the fixed +60 code -->
             <div class="phone-wrapper">
                 <span class="phone-prefix">+60</span>
                 <input type="tel" id="phone" name="Nombor Telefon" placeholder="123456789" required>
             </div>
             
             <label for="alamat">Alamat</label>
-            <textarea id="alamat" name="Alamat" rows="3" placeholder="Enter full address..." required></textarea>
+            <!-- Pre-filled "Keningau" goes right here inside the textarea tags -->
+            <textarea id="alamat" name="Alamat" rows="3" placeholder="Enter full address..." required>Keningau</textarea>
             
             <button type="submit">Submit Details</button>
             
@@ -143,10 +141,8 @@
             submitButton.disabled = true;
             submitButton.innerText = "Sending...";
 
-            // Create the form data package
             const formData = new FormData(form);
             
-            // Grab the raw phone number and attach the +60 to the front before sending
             const rawPhone = formData.get('Nombor Telefon');
             formData.set('Nombor Telefon', '+60' + rawPhone);
             
@@ -154,6 +150,10 @@
                 .then(response => {
                     alert("Terima Kasih " + userName + "!");
                     form.reset(); 
+                    
+                    // After the form resets, this line ensures "Keningau" is placed back into the box for the next person
+                    document.getElementById('alamat').value = "Keningau"; 
+                    
                     submitButton.disabled = false;
                     submitButton.innerText = "Submit Details";
                 })
