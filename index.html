@@ -1,652 +1,827 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Maklumat Pendaki · Aki-Aki Trail</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Jost:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
-
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --forest:   #0d2218;
-      --pine:     #163a28;
-      --moss:     #2a5c40;
-      --sage:     #4c8c67;
-      --mist:     #a8c5b4;
-      --gold:     #c8a96e;
-      --gold-lt:  #e0c88e;
-      --cream:    #f5ede0;
-      --white:    #fdfaf6;
-      --err:      #e07070;
+      --forest:  #091a10;
+      --pine:    #122d1e;
+      --moss:    #1e4a30;
+      --sage:    #3d7a56;
+      --mist:    #95b8a5;
+      --gold:    #c9a96e;
+      --gold-lt: #dfc28d;
+      --cream:   #f3e9d8;
+      --white:   #fdfaf5;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Jost', sans-serif;
-      background-color: var(--forest);
+      background: var(--forest);
       color: var(--cream);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ─── HERO ─────────────────────────────── */
+    /* ── Noise grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: .025;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ════════════════════════════
+       HERO
+    ════════════════════════════ */
     .hero {
       position: relative;
       width: 100%;
-      height: 38vh;
-      min-height: 240px;
+      height: 42vh;
+      min-height: 260px;
       overflow: hidden;
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      padding-bottom: 2.5rem;
+      padding-bottom: 3.5rem;
     }
 
-    /* SVG mountain silhouette */
-    .hero-bg {
+    .hero-sky {
       position: absolute;
       inset: 0;
-      background: linear-gradient(175deg, #050f09 0%, #0d2218 45%, #163a28 100%);
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, #0a2a18 0%, #091a10 60%, #050d09 100%);
     }
 
+    /* Moonlight glow */
+    .hero-moon {
+      position: absolute;
+      top: 12%;
+      right: 18%;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #e8d5a3 0%, #c9a96e 40%, transparent 70%);
+      box-shadow: 0 0 40px 12px rgba(201,169,110,.2), 0 0 80px 30px rgba(201,169,110,.08);
+      animation: moonFloat 6s ease-in-out infinite;
+    }
+
+    .hero-moon::after {
+      content: '';
+      position: absolute;
+      inset: -30px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,169,110,.12) 0%, transparent 70%);
+    }
+
+    /* Stars */
     .hero-stars {
       position: absolute;
       inset: 0;
+    }
+    .hero-stars::before,
+    .hero-stars::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    .hero-stars::before {
       background-image:
-        radial-gradient(1px 1px at 20% 15%, rgba(200,169,110,.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 55% 8%,  rgba(200,169,110,.4) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 78% 20%, rgba(168,197,180,.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 35% 30%,  rgba(200,169,110,.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 90% 12%,  rgba(168,197,180,.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 10% 40%,  rgba(255,255,255,.2) 0%, transparent 100%),
-        radial-gradient(1px 1px at 63% 25%,  rgba(255,255,255,.15) 0%, transparent 100%);
+        radial-gradient(1.5px 1.5px at 8%  12%, rgba(255,245,220,.8) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 22% 6%,  rgba(255,245,220,.5) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 38% 18%, rgba(255,245,220,.4) 0%, transparent 100%),
+        radial-gradient(2px   2px   at 52% 9%,  rgba(255,245,220,.6) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 67% 14%, rgba(255,245,220,.3) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 83% 7%,  rgba(255,245,220,.7) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 14% 28%, rgba(255,245,220,.3) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 75% 22%, rgba(255,245,220,.4) 0%, transparent 100%);
+    }
+    .hero-stars::after {
+      background-image:
+        radial-gradient(1px 1px at 30% 35%, rgba(201,169,110,.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 44% 28%, rgba(255,255,255,.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 91% 18%, rgba(255,255,255,.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 5%  40%, rgba(201,169,110,.3) 0%, transparent 100%);
     }
 
-    .hero-mountains {
+    /* SVG layers */
+    .hero-svg {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
     }
 
-    .hero-glow {
+    /* Horizon mist */
+    .hero-mist {
       position: absolute;
-      bottom: 20%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 340px;
-      height: 120px;
-      background: radial-gradient(ellipse, rgba(200,169,110,.18) 0%, transparent 70%);
-      pointer-events: none;
+      bottom: 18%;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(to top, rgba(201,169,110,.04) 0%, transparent 100%);
     }
 
     .hero-content {
       position: relative;
-      z-index: 2;
+      z-index: 3;
       text-align: center;
     }
 
-    .hero-badge {
-      display: inline-block;
-      font-family: 'Jost', sans-serif;
-      font-size: .65rem;
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .62rem;
       font-weight: 500;
-      letter-spacing: .22em;
+      letter-spacing: .25em;
       text-transform: uppercase;
       color: var(--gold);
-      border: 1px solid rgba(200,169,110,.35);
-      padding: .35rem .9rem;
+      padding: .3rem .85rem;
+      border: 1px solid rgba(201,169,110,.3);
       border-radius: 50px;
-      margin-bottom: .85rem;
-      backdrop-filter: blur(6px);
-      background: rgba(13,34,24,.4);
-      animation: fadeUp .8s ease both;
+      background: rgba(9,26,16,.5);
+      backdrop-filter: blur(8px);
+      margin-bottom: .9rem;
+      animation: fadeUp .9s ease both;
+    }
+
+    .hero-eyebrow-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: .7;
     }
 
     .hero-title {
       font-family: 'Cinzel', serif;
-      font-size: clamp(1.6rem, 5vw, 2.6rem);
+      font-size: clamp(1.9rem, 6vw, 3rem);
       font-weight: 700;
       color: var(--white);
-      letter-spacing: .04em;
-      line-height: 1.15;
-      text-shadow: 0 2px 18px rgba(0,0,0,.5);
-      animation: fadeUp .8s .1s ease both;
+      letter-spacing: .06em;
+      line-height: 1.1;
+      text-shadow: 0 4px 24px rgba(0,0,0,.6);
+      animation: fadeUp .9s .12s ease both;
     }
 
-    .hero-title span {
+    .hero-title em {
+      font-style: normal;
       color: var(--gold);
+      text-shadow: 0 0 30px rgba(201,169,110,.3);
     }
 
-    /* ─── MAIN LAYOUT ─────────────────────── */
+    .hero-subtitle {
+      margin-top: .5rem;
+      font-size: .72rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--mist);
+      opacity: .7;
+      animation: fadeUp .9s .22s ease both;
+    }
+
+    /* ════════════════════════════
+       LAYOUT
+    ════════════════════════════ */
     .wrapper {
-      max-width: 520px;
+      max-width: 500px;
       margin: 0 auto;
-      padding: 0 1.25rem 4rem;
+      padding: 0 1.25rem 5rem;
     }
 
-    /* ─── CARD ────────────────────────────── */
+    /* ════════════════════════════
+       CARD
+    ════════════════════════════ */
     .card {
-      background: linear-gradient(145deg, rgba(26,58,40,.85) 0%, rgba(13,34,24,.9) 100%);
-      border: 1px solid rgba(200,169,110,.18);
-      border-radius: 20px;
-      padding: 2.2rem 2rem;
+      background: linear-gradient(160deg,
+        rgba(30,74,48,.7) 0%,
+        rgba(18,45,30,.82) 50%,
+        rgba(9,26,16,.88) 100%);
+      border: 1px solid rgba(201,169,110,.16);
+      border-radius: 22px;
+      padding: 2.4rem 2rem 2rem;
       box-shadow:
-        0 8px 40px rgba(0,0,0,.4),
-        inset 0 1px 0 rgba(200,169,110,.12);
-      backdrop-filter: blur(12px);
-      animation: fadeUp .7s .25s ease both;
-      margin-top: -2rem;
+        0 2px 0 rgba(201,169,110,.08) inset,
+        0 -1px 0 rgba(0,0,0,.3) inset,
+        0 20px 60px rgba(0,0,0,.5),
+        0 4px 16px rgba(0,0,0,.3);
+      backdrop-filter: blur(16px);
+      margin-top: -2.5rem;
       position: relative;
-      z-index: 1;
+      z-index: 2;
+      animation: fadeUp .8s .2s ease both;
+    }
+
+    /* Top gold shimmer line */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,169,110,.45), transparent);
+      border-radius: 50%;
     }
 
     .card-header {
       display: flex;
       align-items: center;
-      gap: .75rem;
-      margin-bottom: 1.8rem;
-      padding-bottom: 1.2rem;
-      border-bottom: 1px solid rgba(200,169,110,.15);
+      gap: .85rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.4rem;
+      border-bottom: 1px solid rgba(201,169,110,.1);
     }
 
-    .card-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--moss), var(--pine));
-      border-radius: 12px;
+    .card-emblem {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(61,122,86,.9), rgba(30,74,48,.9));
+      border: 1px solid rgba(201,169,110,.2);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+      font-size: 1.2rem;
+      box-shadow: 0 6px 16px rgba(0,0,0,.35), inset 0 1px 0 rgba(201,169,110,.15);
       flex-shrink: 0;
     }
 
-    .card-header h2 {
+    .card-header-text h2 {
       font-family: 'Cinzel', serif;
-      font-size: 1rem;
+      font-size: .95rem;
       font-weight: 600;
       color: var(--white);
-      letter-spacing: .06em;
-      line-height: 1.3;
+      letter-spacing: .08em;
+      line-height: 1.2;
     }
 
-    .card-header p {
-      font-size: .75rem;
+    .card-header-text p {
+      font-size: .72rem;
       color: var(--mist);
-      letter-spacing: .04em;
-      margin-top: .1rem;
+      letter-spacing: .05em;
+      margin-top: .2rem;
+      opacity: .8;
     }
 
-    /* ─── FORM ELEMENTS ───────────────────── */
+    /* ════════════════════════════
+       FIELDS
+    ════════════════════════════ */
     .field {
-      margin-bottom: 1.3rem;
-      animation: fadeUp .6s ease both;
+      margin-bottom: 1.25rem;
+      animation: fadeUp .7s ease both;
     }
-
-    .field:nth-child(1) { animation-delay: .3s; }
-    .field:nth-child(2) { animation-delay: .38s; }
-    .field:nth-child(3) { animation-delay: .46s; }
-    .field:nth-child(4) { animation-delay: .54s; }
+    .field:nth-child(1) { animation-delay: .32s; }
+    .field:nth-child(2) { animation-delay: .40s; }
+    .field:nth-child(3) { animation-delay: .48s; }
+    .field:nth-child(4) { animation-delay: .56s; }
 
     label {
-      display: block;
-      font-size: .7rem;
+      display: flex;
+      align-items: baseline;
+      gap: .45rem;
+      font-size: .67rem;
       font-weight: 500;
-      letter-spacing: .14em;
+      letter-spacing: .16em;
       text-transform: uppercase;
       color: var(--mist);
       margin-bottom: .5rem;
+      opacity: .9;
     }
 
-    .optional-text {
-      font-size: .65em;
+    .badge-optional {
+      font-size: .6rem;
       font-weight: 400;
-      letter-spacing: .06em;
+      letter-spacing: .05em;
       text-transform: none;
-      color: var(--sage);
       font-style: italic;
+      color: var(--sage);
+      opacity: .8;
     }
 
-    .input-wrap {
-      position: relative;
-    }
+    .input-wrap { position: relative; }
 
-    .input-icon {
+    /* Left icon */
+    .iico {
       position: absolute;
       left: .9rem;
       top: 50%;
       transform: translateY(-50%);
-      font-size: .9rem;
+      font-size: .88rem;
       pointer-events: none;
-      opacity: .55;
+      opacity: .45;
+      line-height: 1;
     }
 
-    input, select {
+    /* +60 prefix */
+    .prefix {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 .8rem 0 .9rem;
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: .03em;
+      border-right: 1px solid rgba(201,169,110,.18);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    input {
       width: 100%;
-      background: rgba(13,34,24,.6);
-      border: 1px solid rgba(200,169,110,.2);
-      border-radius: 10px;
+      background: rgba(9,26,16,.55);
+      border: 1px solid rgba(201,169,110,.16);
+      border-radius: 11px;
       color: var(--white);
       font-family: 'Jost', sans-serif;
-      font-size: .9rem;
+      font-size: .88rem;
       font-weight: 300;
-      letter-spacing: .03em;
-      padding: .8rem 1rem .8rem 2.5rem;
-      transition: border-color .25s, box-shadow .25s, background .25s;
+      letter-spacing: .04em;
+      padding: .82rem 1rem .82rem 2.6rem;
       outline: none;
-      appearance: none;
+      transition: border-color .22s, box-shadow .22s, background .22s;
+      -webkit-appearance: none;
     }
 
-    input::placeholder { color: rgba(168,197,180,.35); }
-
-    input:focus, select:focus {
-      border-color: rgba(200,169,110,.55);
-      box-shadow: 0 0 0 3px rgba(200,169,110,.1);
-      background: rgba(22,58,40,.7);
+    input.has-prefix {
+      padding-left: 3.7rem;
     }
 
-    input:valid:not(:placeholder-shown) {
-      border-color: rgba(76,140,103,.5);
+    input::placeholder { color: rgba(149,184,165,.28); }
+
+    input:focus {
+      border-color: rgba(201,169,110,.5);
+      box-shadow: 0 0 0 3px rgba(201,169,110,.09);
+      background: rgba(18,45,30,.65);
     }
 
-    .select-arrow {
-      position: absolute;
-      right: .9rem;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      opacity: .5;
-      font-size: .7rem;
+    input:valid:not(:placeholder-shown):not(:focus) {
+      border-color: rgba(61,122,86,.55);
     }
 
-    select option {
-      background: var(--pine);
-      color: var(--cream);
-    }
-
-    /* ─── DIVIDER ─────────────────────────── */
-    .divider {
+    /* ── Section label ── */
+    .section-label {
       display: flex;
       align-items: center;
-      gap: .75rem;
-      margin: 1.5rem 0;
-      opacity: .4;
+      gap: .6rem;
+      margin: 1.6rem 0 1.1rem;
+      animation: fadeUp .7s .52s ease both;
     }
-    .divider-line { flex: 1; height: 1px; background: var(--gold); }
-    .divider-dot  { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
 
-    /* ─── BUTTON ──────────────────────────── */
+    .section-label span {
+      font-size: .6rem;
+      font-weight: 500;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: .6;
+      white-space: nowrap;
+    }
+
+    .section-label::before,
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,169,110,.2));
+    }
+    .section-label::before { background: linear-gradient(90deg, rgba(201,169,110,.2), transparent); }
+
+    /* ════════════════════════════
+       BUTTON
+    ════════════════════════════ */
     .btn-submit {
       width: 100%;
-      padding: .95rem 1.5rem;
-      background: linear-gradient(135deg, var(--gold) 0%, #b8922e 100%);
-      color: var(--forest);
-      font-family: 'Cinzel', serif;
-      font-size: .85rem;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: transform .2s, box-shadow .2s, opacity .2s;
-      box-shadow: 0 4px 20px rgba(200,169,110,.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: .6rem;
-      animation: fadeUp .6s .62s ease both;
-    }
-
-    .btn-submit:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(200,169,110,.5);
-    }
-
-    .btn-submit:active:not(:disabled) {
-      transform: translateY(0);
-    }
-
-    .btn-submit:disabled {
-      opacity: .55;
-      cursor: not-allowed;
-    }
-
-    .btn-icon { font-size: 1rem; }
-
-    .btn-loader {
-      display: none;
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(13,34,24,.3);
-      border-top-color: var(--forest);
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-    }
-
-    .btn-submit.loading .btn-text  { display: none; }
-    .btn-submit.loading .btn-icon  { display: none; }
-    .btn-submit.loading .btn-loader { display: block; }
-
-    /* ─── FOOTER NOTE ─────────────────────── */
-    .form-note {
-      text-align: center;
-      font-size: .68rem;
-      color: var(--sage);
-      margin-top: 1rem;
-      letter-spacing: .04em;
-      animation: fadeUp .6s .7s ease both;
-    }
-
-    /* ─── MODAL ───────────────────────────── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(5,15,9,.75);
-      backdrop-filter: blur(6px);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 1.5rem;
-    }
-
-    .modal-overlay.visible {
-      display: flex;
-      animation: backdropIn .3s ease;
-    }
-
-    .modal-box {
-      background: linear-gradient(145deg, #1a3a28, #0d2218);
-      border: 1px solid rgba(200,169,110,.3);
-      border-radius: 24px;
-      padding: 2.5rem 2rem;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 1px 0 rgba(200,169,110,.15);
-      max-width: 340px;
-      width: 100%;
-      animation: modalIn .4s cubic-bezier(.34,1.56,.64,1) both;
-    }
-
-    .modal-checkmark {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, var(--moss), var(--sage));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      margin: 0 auto 1.25rem;
-      box-shadow: 0 8px 24px rgba(76,140,103,.4);
-      animation: popIn .5s .2s cubic-bezier(.34,1.56,.64,1) both;
-    }
-
-    .modal-box h3 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--white);
-      margin-bottom: .6rem;
-      letter-spacing: .06em;
-    }
-
-    .modal-box p {
-      font-size: .82rem;
-      color: var(--mist);
-      line-height: 1.6;
-      font-weight: 300;
-      letter-spacing: .03em;
-    }
-
-    .modal-divider {
-      width: 40px;
-      height: 1px;
-      background: var(--gold);
-      opacity: .4;
-      margin: 1.2rem auto;
-    }
-
-    .modal-btn {
-      margin-top: 1.5rem;
-      padding: .8rem 2.5rem;
-      background: linear-gradient(135deg, var(--gold), #b8922e);
+      margin-top: 1.6rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #d4ae72 0%, #b8892a 100%);
       color: var(--forest);
       font-family: 'Cinzel', serif;
       font-size: .8rem;
       font-weight: 700;
-      letter-spacing: .1em;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .55rem;
+      box-shadow:
+        0 1px 0 rgba(255,255,255,.2) inset,
+        0 6px 24px rgba(201,169,110,.3),
+        0 2px 6px rgba(0,0,0,.2);
+      transition: transform .18s, box-shadow .18s, opacity .18s;
+      animation: fadeUp .7s .65s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 60%);
+      border-radius: inherit;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 1px 0 rgba(255,255,255,.2) inset, 0 10px 32px rgba(201,169,110,.45), 0 3px 8px rgba(0,0,0,.25);
+    }
+
+    .btn-submit:active:not(:disabled) { transform: translateY(0); }
+
+    .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+    .btn-spinner {
+      display: none;
+      width: 15px; height: 15px;
+      border: 2px solid rgba(9,26,16,.3);
+      border-top-color: var(--forest);
+      border-radius: 50%;
+      animation: spin .65s linear infinite;
+    }
+
+    .btn-submit.loading .btn-label,
+    .btn-submit.loading .btn-emoji { display: none; }
+    .btn-submit.loading .btn-spinner { display: block; }
+
+    /* ── Note ── */
+    .form-foot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+      margin-top: 1rem;
+      font-size: .65rem;
+      color: var(--sage);
+      letter-spacing: .08em;
+      opacity: .7;
+      animation: fadeUp .7s .72s ease both;
+    }
+
+    /* ════════════════════════════
+       MODAL
+    ════════════════════════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5,12,8,.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+      animation: fadeIn .25s ease both;
+    }
+
+    .modal {
+      background: linear-gradient(155deg, #1a3d28, #0d2118);
+      border: 1px solid rgba(201,169,110,.25);
+      border-radius: 24px;
+      padding: 2.8rem 2.2rem 2.2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 320px;
+      box-shadow:
+        0 2px 0 rgba(201,169,110,.12) inset,
+        0 32px 80px rgba(0,0,0,.65);
+      animation: modalPop .4s cubic-bezier(.34,1.56,.64,1) both;
+      position: relative;
+    }
+
+    .modal::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,169,110,.4), transparent);
+    }
+
+    .modal-ring {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2e6645, #1a3d28);
+      border: 1px solid rgba(201,169,110,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1.4rem;
+      box-shadow: 0 0 0 8px rgba(61,122,86,.12), 0 8px 24px rgba(0,0,0,.4);
+      animation: ringPop .5s .15s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    .modal h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: .07em;
+      margin-bottom: .5rem;
+    }
+
+    .modal-line {
+      width: 36px; height: 1px;
+      background: var(--gold);
+      opacity: .35;
+      margin: 1rem auto;
+    }
+
+    .modal p {
+      font-size: .8rem;
+      font-weight: 300;
+      color: var(--mist);
+      line-height: 1.65;
+      letter-spacing: .03em;
+    }
+
+    .modal-close {
+      margin-top: 1.8rem;
+      padding: .75rem 2.4rem;
+      background: linear-gradient(135deg, #d4ae72, #b8892a);
+      color: var(--forest);
+      font-family: 'Cinzel', serif;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
       text-transform: uppercase;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      transition: transform .2s, box-shadow .2s;
-      box-shadow: 0 4px 16px rgba(200,169,110,.35);
+      box-shadow: 0 4px 16px rgba(201,169,110,.3), inset 0 1px 0 rgba(255,255,255,.2);
+      transition: transform .18s, box-shadow .18s;
     }
 
-    .modal-btn:hover {
+    .modal-close:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(200,169,110,.5);
+      box-shadow: 0 8px 24px rgba(201,169,110,.45);
     }
 
-    /* ─── KEYFRAMES ───────────────────────── */
+    /* ════════════════════════════
+       ANIMATIONS
+    ════════════════════════════ */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
+      from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes backdropIn {
+    @keyframes fadeIn {
       from { opacity: 0; }
       to   { opacity: 1; }
     }
 
-    @keyframes modalIn {
-      from { opacity: 0; transform: scale(.85) translateY(20px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(.88) translateY(16px); }
+      to   { opacity: 1; transform: scale(1)   translateY(0); }
     }
 
-    @keyframes popIn {
+    @keyframes ringPop {
       from { opacity: 0; transform: scale(0); }
       to   { opacity: 1; transform: scale(1); }
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    @keyframes moonFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-5px); }
     }
 
-    /* ─── RESPONSIVE ──────────────────────── */
-    @media (max-width: 480px) {
-      .card { padding: 1.75rem 1.25rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ════════════════════════════
+       RESPONSIVE
+    ════════════════════════════ */
+    @media (max-width: 440px) {
+      .card { padding: 2rem 1.3rem 1.75rem; }
+      .hero-moon { width: 38px; height: 38px; right: 10%; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── HERO ── -->
-  <div class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-stars"></div>
-    <div class="hero-glow"></div>
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-sky"></div>
+  <div class="hero-stars"></div>
+  <div class="hero-moon"></div>
+  <div class="hero-mist"></div>
 
-    <!-- SVG Mountain Silhouette -->
-    <svg class="hero-mountains" viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      <!-- Far mountains -->
-      <path d="M0,200 L120,80 L260,140 L400,60 L540,130 L680,50 L820,120 L960,70 L1080,110 L1200,80 L1200,200 Z"
-            fill="rgba(22,58,40,0.55)"/>
-      <!-- Mid mountains -->
-      <path d="M0,200 L80,120 L200,160 L340,90 L480,155 L600,75 L740,140 L880,95 L1000,145 L1100,100 L1200,130 L1200,200 Z"
-            fill="rgba(26,62,42,0.7)"/>
-      <!-- Near silhouette -->
-      <path d="M0,200 L0,170 L60,155 L160,175 L280,130 L420,165 L520,115 L620,160 L720,110 L840,150 L940,120 L1060,155 L1150,135 L1200,145 L1200,200 Z"
-            fill="rgba(13,34,24,0.95)"/>
-      <!-- Trees suggestion -->
-      <path d="M0,200 L0,185 L30,185 L45,165 L60,185 L90,185 L108,158 L126,185 L160,185 L178,162 L196,185 L230,185 L250,170 L270,185 L320,185 L345,155 L370,185 L430,185 L448,168 L466,185 L510,185 L528,160 L546,185 L590,185 L615,150 L640,185 L700,185 L720,162 L740,185 L790,185 L810,158 L830,185 L880,185 L900,165 L920,185 L960,185 L980,155 L1000,185 L1060,185 L1080,168 L1100,185 L1150,185 L1175,160 L1200,185 L1200,200 Z"
-            fill="#0d2218"/>
-    </svg>
+  <svg class="hero-svg" viewBox="0 0 1200 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <!-- Far range -->
+    <path d="M0,220 L0,140 L100,90 L220,135 L360,68 L500,125 L640,55 L780,115 L900,72 L1020,105 L1120,80 L1200,95 L1200,220 Z"
+          fill="rgba(14,40,24,.5)"/>
+    <!-- Mid range -->
+    <path d="M0,220 L0,155 L70,130 L180,165 L310,100 L450,155 L580,85 L700,148 L820,100 L950,142 L1060,108 L1150,135 L1200,118 L1200,220 Z"
+          fill="rgba(18,48,30,.68)"/>
+    <!-- Near ridge -->
+    <path d="M0,220 L0,172 L50,162 L140,178 L240,145 L360,172 L460,128 L560,168 L660,118 L770,158 L870,130 L980,162 L1080,138 L1160,158 L1200,148 L1200,220 Z"
+          fill="rgba(12,32,20,.88)"/>
+    <!-- Treeline -->
+    <path d="M0,220 L0,195
+      L20,195 L32,178 L44,195
+      L70,195 L84,172 L98,195
+      L128,195 L144,180 L160,195
+      L195,195 L212,168 L229,195
+      L265,195 L280,178 L295,195
+      L335,195 L354,162 L373,195
+      L415,195 L432,174 L449,195
+      L492,195 L510,165 L528,195
+      L572,195 L590,155 L608,195
+      L655,195 L672,172 L689,195
+      L732,195 L750,162 L768,195
+      L812,195 L830,176 L848,195
+      L888,195 L906,160 L924,195
+      L968,195 L985,170 L1002,195
+      L1045,195 L1062,158 L1079,195
+      L1118,195 L1136,175 L1154,195
+      L1200,195 L1200,220 Z"
+          fill="#091a10"/>
+  </svg>
 
-    <div class="hero-content">
-      <div class="hero-badge">Sabah, Malaysia</div>
-      <h1 class="hero-title">Aki-Aki <span>Trail</span></h1>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-dot"></div>
+      Sabah, Malaysia
+      <div class="hero-eyebrow-dot"></div>
     </div>
+    <h1 class="hero-title">Aki-Aki <em>Trail</em></h1>
+    <p class="hero-subtitle">3.3 km · 1780 m</p>
   </div>
+</div>
 
-  <!-- ── FORM WRAPPER ── -->
-  <div class="wrapper">
-    <div class="card">
+<!-- ══ FORM ══ -->
+<div class="wrapper">
+  <div class="card">
 
-      <div class="card-header">
-        <div class="card-icon">⛰️</div>
-        <div>
-          <h2>Pendaftaran Pendaki</h2>
-          <p>Sila isi maklumat dengan lengkap dan betul</p>
+    <div class="card-header">
+      <div class="card-emblem">⛰️</div>
+      <div class="card-header-text">
+        <h2>Pendaftaran Pendaki</h2>
+        <p>Sila isi maklumat dengan lengkap dan betul</p>
+      </div>
+    </div>
+
+    <form name="google-sheet-form" novalidate>
+
+      <!-- Nama -->
+      <div class="field">
+        <label for="name">Nama Penuh</label>
+        <div class="input-wrap">
+          <span class="iico">👤</span>
+          <input type="text" id="name" name="Nama Penuh"
+                 placeholder="Cth. ALI BIN ABU" required autocomplete="name"/>
         </div>
       </div>
 
-      <form name="google-sheet-form" novalidate>
-
-        <!-- Full Name -->
-        <div class="field">
-          <label for="name">Nama Penuh</label>
-          <div class="input-wrap">
-            <span class="input-icon">👤</span>
-            <input type="text" id="name" name="Nama Penuh"
-                   placeholder="Cth. ALI BIN ABU" required autocomplete="name"/>
-          </div>
+      <!-- IC / Passport -->
+      <div class="field">
+        <label for="ic_passport">
+          No. IC / Passport
+          <span class="badge-optional">(Boleh isi kemudian)</span>
+        </label>
+        <div class="input-wrap">
+          <span class="iico">🪪</span>
+          <input type="text" id="ic_passport" name="IC/passport"
+                 placeholder="Cth. 900101-12-3456" autocomplete="off"/>
         </div>
+      </div>
 
-        <!-- IC / Passport -->
-        <div class="field">
-          <label for="ic_passport">
-            No. IC / Passport
-            <span class="optional-text">(Boleh isi kemudian)</span>
-          </label>
-          <div class="input-wrap">
-            <span class="input-icon">🪪</span>
-            <input type="text" id="ic_passport" name="IC/passport"
-                   placeholder="Cth. 900101-12-3456" autocomplete="off"/>
-          </div>
+      <!-- Telefon -->
+      <div class="field">
+        <label for="phone">No. Telefon</label>
+        <div class="input-wrap">
+          <span class="prefix">+60</span>
+          <input type="tel" id="phone" name="No Telefon"
+                 class="has-prefix"
+                 placeholder="12-3456789" autocomplete="tel"/>
         </div>
+      </div>
 
-        <!-- Phone -->
-        <div class="field">
-          <label for="phone">No. Telefon</label>
-          <div class="input-wrap">
-            <span class="input-icon">📱</span>
-            <input type="tel" id="phone" name="No Telefon"
-                   placeholder="Cth. 012-3456789" autocomplete="tel"/>
-          </div>
+      <div class="section-label">
+        <span>Lokasi</span>
+      </div>
+
+      <!-- Alamat -->
+      <div class="field">
+        <label for="alamat">Alamat / Kawasan</label>
+        <div class="input-wrap">
+          <span class="iico">📍</span>
+          <input type="text" id="alamat" name="Alamat"
+                 value="KENINGAU" placeholder="Cth. KENINGAU" required/>
         </div>
+      </div>
 
-        <div class="divider">
-          <div class="divider-line"></div>
-          <div class="divider-dot"></div>
-          <div class="divider-line"></div>
-        </div>
+      <button type="submit" class="btn-submit" id="submit-btn">
+        <span class="btn-emoji">🏔️</span>
+        <span class="btn-label">Daftar Sekarang</span>
+        <div class="btn-spinner"></div>
+      </button>
 
-        <!-- Alamat -->
-        <div class="field">
-          <label for="alamat">Alamat / Kawasan</label>
-          <div class="input-wrap">
-            <span class="input-icon">📍</span>
-            <input type="text" id="alamat" name="Alamat"
-                   value="KENINGAU" placeholder="Cth. KENINGAU" required/>
-          </div>
-        </div>
+    </form>
 
-        <!-- Submit -->
-        <button type="submit" class="btn-submit" id="submit-btn">
-          <span class="btn-icon">🏔️</span>
-          <span class="btn-text">Daftar Sekarang</span>
-          <div class="btn-loader"></div>
-        </button>
-
-      </form>
-
-      <p class="form-note">🔒 Maklumat anda disimpan dengan selamat</p>
+    <div class="form-foot">
+      <span>🔒</span>
+      <span>Maklumat anda disimpan dengan selamat</span>
     </div>
+
   </div>
+</div>
 
-  <!-- ── SUCCESS MODAL ── -->
-  <div class="modal-overlay" id="success-modal">
-    <div class="modal-box">
-      <div class="modal-checkmark">✓</div>
-      <h3 id="modal-message">Terima Kasih!</h3>
-      <div class="modal-divider"></div>
-      <p>Pendaftaran anda telah berjaya direkodkan. Selamat mendaki dan berhati-hati di laluan!</p>
-      <button class="modal-btn" onclick="closeModal()">Tutup</button>
-    </div>
+<!-- ══ MODAL ══ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-ring">✓</div>
+    <h3 id="modal-name">Terima Kasih!</h3>
+    <div class="modal-line"></div>
+    <p>Pendaftaran anda telah berjaya direkodkan.<br>Selamat mendaki dan berhati-hati di laluan!</p>
+    <button class="modal-close" onclick="closeModal()">Tutup</button>
   </div>
+</div>
 
-  <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwGoMEpV5NTiT4Blywk1uDOqRJ0FJ-u4GmyWv9g-K174JW3mcouO9tCq7DAtABnQZpT9A/exec';
-    const form = document.forms['google-sheet-form'];
-    const submitBtn = document.getElementById('submit-btn');
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwGoMEpV5NTiT4Blywk1uDOqRJ0FJ-u4GmyWv9g-K174JW3mcouO9tCq7DAtABnQZpT9A/exec';
+  const form      = document.forms['google-sheet-form'];
+  const submitBtn = document.getElementById('submit-btn');
+  const overlay   = document.getElementById('modal-overlay');
 
-    const submitAudio = new Audio('https://raw.githubusercontent.com/Brianboi98/maklumat-pendaki-aki-aki-trail/refs/heads/main/ElevenLabs_2026-05-28T14_33_50_Amelia%20-%20young%20and%20enthusiastic_pvc_sp100_s50_sb48_se0_m2.mp3');
+  const audio = new Audio('https://raw.githubusercontent.com/Brianboi98/maklumat-pendaki-aki-aki-trail/refs/heads/main/ElevenLabs_2026-05-28T14_33_50_Amelia%20-%20young%20and%20enthusiastic_pvc_sp100_s50_sb48_se0_m2.mp3');
 
-    function closeModal() {
-      document.getElementById('success-modal').classList.remove('visible');
+  function closeModal() {
+    overlay.classList.remove('open');
+  }
+
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const nameVal = document.getElementById('name').value.trim();
+    if (!nameVal) { document.getElementById('name').focus(); return; }
+
+    submitBtn.disabled = true;
+    submitBtn.classList.add('loading');
+
+    const formData = new FormData(form);
+
+    // Uppercase
+    formData.set('Nama Penuh', formData.get('Nama Penuh').toUpperCase());
+    formData.set('Alamat',     formData.get('Alamat').toUpperCase());
+
+    // IC fallback
+    const ic = formData.get('IC/passport') || '';
+    if (ic.trim() === '') formData.set('IC/passport', 'ISI KEMUDIAN');
+
+    // Phone prefix logic - Improved to strip leading zeroes if user typed them
+    let phone = formData.get('No Telefon') || '';
+    phone = phone.trim();
+    if (phone !== '') {
+      if (phone.startsWith('0')) {
+        phone = phone.substring(1);
+      }
+      formData.set('No Telefon', '+60' + phone);
     }
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
+    fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' })
+      .then(() => {
+        audio.play().catch(() => {});
 
-      const nameVal = document.getElementById('name').value.trim();
-      if (!nameVal) {
-        document.getElementById('name').focus();
-        return;
-      }
+        document.getElementById('modal-name').innerText = 'Terima Kasih, ' + nameVal.split(' ')[0] + '!';
+        overlay.classList.add('open');
 
-      submitBtn.disabled = true;
-      submitBtn.classList.add('loading');
+        form.reset();
+        document.getElementById('alamat').value = 'KENINGAU';
 
-      const userName = nameVal;
-      const formData = new FormData(form);
-
-      // Uppercase name & address
-      formData.set('Nama Penuh', formData.get('Nama Penuh').toUpperCase());
-      formData.set('Alamat',     formData.get('Alamat').toUpperCase());
-
-      // IC fallback
-      const rawIC = formData.get('IC/passport');
-      if (rawIC && rawIC.trim() === '') {
-        formData.set('IC/passport', 'ISI KEMUDIAN');
-      }
-
-      fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
-        .then(() => {
-          // Play audio
-          submitAudio.play().catch(err => console.warn('Audio:', err));
-
-          // Show modal
-          document.getElementById('modal-message').innerText = 'Terima Kasih, ' + userName + '!';
-          document.getElementById('success-modal').classList.add('visible');
-
-          // Reset form
-          form.reset();
-          document.getElementById('alamat').value = 'KENINGAU';
-
-          submitBtn.disabled = false;
-          submitBtn.classList.remove('loading');
-        })
-        .catch(() => {
-          alert('Ralat: Sila cuba semula.');
-          submitBtn.disabled = false;
-          submitBtn.classList.remove('loading');
-        });
-    });
-
-    // Close modal on backdrop click
-    document.getElementById('success-modal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
-  </script>
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+      })
+      .catch(() => {
+        alert('Ralat rangkaian. Sila cuba semula.');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+      });
+  });
+</script>
 </body>
 </html>
