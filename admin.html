@@ -1,0 +1,238 @@
+```html
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+  <title>Admin · Aki-Aki Trail</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet"/>
+  
+  <style>
+    :root {
+      --bg-deep: #050d09;
+      --glass-bg: rgba(10, 31, 20, 0.8);
+      --glass-border: rgba(212, 175, 55, 0.2);
+      --gold-primary: #D4AF37;
+      --text-main: #F4F1E1;
+      --text-muted: #A3B8A8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      padding: 1.5rem 1rem;
+      min-height: 100vh;
+    }
+
+    /* Header Section */
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 span { color: var(--gold-primary); }
+
+    .stats {
+      display: inline-block;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--gold-primary);
+      padding: 0.4rem 1.2rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gold-primary);
+    }
+
+    /* Container for Hikers */
+    #hikers-container {
+      display: grid;
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Hiker Cards (Mobile Friendly) */
+    .hiker-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      animation: slideUp 0.4s ease-out both;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      padding-bottom: 0.8rem;
+    }
+
+    .hiker-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gold-primary);
+    }
+
+    .hiker-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .info-icon {
+      width: 24px;
+      opacity: 0.7;
+    }
+
+    .info-value {
+      font-weight: 500;
+    }
+
+    /* Make phone numbers clickable and look like links */
+    a.phone-link {
+      color: #79BFA1;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    a.phone-link:hover { text-decoration: underline; }
+
+    /* Loading state */
+    .loading-msg {
+      text-align: center;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 2rem;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Aki-Aki <span>Admin</span></h1>
+    <div class="stats" id="total-count">Jumlah Pendaki: 0</div>
+  </header>
+
+  <main id="hikers-container">
+    <div class="loading-msg">Memuatkan data dari awan...</div>
+  </main>
+
+  <!-- ======================================================================= -->
+  <!-- FIREBASE SCRIPT                                                         -->
+  <!-- ======================================================================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy } 
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // 1. PASTE YOUR EXACT SAME KEYS HERE
+    const firebaseConfig = {
+      apiKey: "PASTE_YOUR_FULL_API_KEY_HERE", 
+      authDomain: "boi-linopod.firebaseapp.com",
+      projectId: "boi-linopod",
+      storageBucket: "boi-linopod.firebasestorage.app",
+      messagingSenderId: "219749551037",
+      appId: "PASTE_YOUR_FULL_APP_ID_HERE",
+      measurementId: "G-CESMEGMT3L"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const container = document.getElementById('hikers-container');
+    const countDisplay = document.getElementById('total-count');
+
+    // 2. FETCH DATA IN REAL-TIME
+    const hikersQuery = query(collection(db, "pendaki"), orderBy("timestamp", "desc"));
+
+    onSnapshot(hikersQuery, (snapshot) => {
+      container.innerHTML = ''; // Clear loading message
+      countDisplay.innerText = `Jumlah Pendaki: ${snapshot.size}`;
+
+      if (snapshot.empty) {
+        container.innerHTML = '<div class="loading-msg">Belum ada rekod.</div>';
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        
+        // Format the Date to look nice (e.g., "30 May 2026, 08:30 AM")
+        let timeString = "Baru sahaja";
+        if (data.timestamp) {
+          const dateObj = data.timestamp.toDate();
+          timeString = dateObj.toLocaleString('ms-MY', { 
+            day: 'numeric', month: 'short', year: 'numeric', 
+            hour: '2-digit', minute: '2-digit' 
+          });
+        }
+
+        // Create the Card HTML
+        const card = document.createElement('div');
+        card.className = 'hiker-card';
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="hiker-name">${data.name || 'Tiada Nama'}</div>
+            <div class="hiker-time">${timeString}</div>
+          </div>
+          
+          <div class="info-row">
+            <span class="info-icon">🪪</span>
+            <span class="info-value">${data.ic || '-'}</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="info-icon">📞</span>
+            <span class="info-value">
+              <!-- tel: makes it clickable on mobile! -->
+              <a href="tel:${data.phone}" class="phone-link">${data.phone || '-'}</a>
+            </span>
+          </div>
+          
+          <div class="info-row">
+            <span class="info-icon">📍</span>
+            <span class="info-value">${data.address || '-'}</span>
+          </div>
+        `;
+        
+        container.appendChild(card);
+      });
+    }, (error) => {
+      console.error("Error reading database:", error);
+      container.innerHTML = '<div class="loading-msg" style="color: red;">Gagal memuatkan data. Sila semak console (F12).</div>';
+    });
+  </script>
+</body>
+</html>
+
+```
