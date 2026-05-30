@@ -1,8 +1,7 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
   <meta charset="UTF-8"/>
-  <!-- The maximum-scale and user-scalable=0 helps prevent accidental zooming -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
   <title>Maklumat Pendaki · Aki-Aki Trail</title>
   
@@ -33,11 +32,10 @@
       color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
-      /* Subtle radial gradient for depth */
       background-image: radial-gradient(circle at 50% 0%, #112d1e 0%, var(--bg-deep) 70%);
     }
 
-    /* ── Noise Texture Overlay for Premium Feel ── */
+    /* Noise Texture */
     body::after {
       content: '';
       position: fixed;
@@ -49,13 +47,25 @@
     }
 
     /* ════════════════════════════
+       MAIN LAYOUT (RESPONSIVE)
+    ════════════════════════════ */
+    .main-layout {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 1800px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    /* ════════════════════════════
        HERO SECTION
     ════════════════════════════ */
     .hero {
       position: relative;
       width: 100%;
       height: 40vh;
-      min-height: 300px;
+      min-height: 320px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -88,7 +98,6 @@
       z-index: 0;
     }
 
-    /* Sleek Mountain Silhouette */
     .hero-mountains {
       position: absolute;
       bottom: 0;
@@ -99,6 +108,7 @@
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath fill='%230a1f14' fill-opacity='0.6' d='M0,192L48,197.3C96,203,192,213,288,202.7C384,192,480,160,576,144C672,128,768,128,864,149.3C960,171,1056,213,1152,213.3C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3Cpath fill='%23050d09' d='M0,256L60,240C120,224,240,192,360,197.3C480,203,600,245,720,256C840,267,960,245,1080,213.3C1200,181,1320,139,1380,117.3L1440,96L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
       background-size: cover;
       z-index: 1;
+      transition: height 0.3s ease;
     }
     
     .hero-gradient-overlay {
@@ -156,23 +166,23 @@
     }
 
     /* ════════════════════════════
-       MAIN FORM WRAPPER
+       FORM WRAPPER
     ════════════════════════════ */
     .wrapper {
+      width: 100%;
       max-width: 480px;
-      margin: -60px auto 0; /* Overlaps the hero section slightly */
+      margin: -60px auto 0; /* Overlaps hero on mobile */
       padding: 0 1.25rem 4rem;
       position: relative;
       z-index: 10;
     }
 
-    /* Sleek Glassmorphism Card */
     .card {
       background: var(--glass-bg);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--glass-border);
-      border-top: 1px solid rgba(212, 175, 55, 0.3); /* Premium top highlight */
+      border-top: 1px solid rgba(212, 175, 55, 0.3);
       border-radius: 24px;
       padding: 2.5rem 2rem;
       box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
@@ -207,7 +217,6 @@
       animation: slideDownFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
     
-    /* Staggered cascading delay for the slide down effect */
     .field:nth-of-type(1) { animation-delay: 0.3s; }
     .field:nth-of-type(2) { animation-delay: 0.4s; }
     .field:nth-of-type(3) { animation-delay: 0.5s; }
@@ -251,7 +260,7 @@
       opacity: 0.7;
       pointer-events: none;
       transition: opacity 0.3s;
-      z-index: 2; /* Keeps icon above autocomplete backgrounds */
+      z-index: 2;
     }
 
     .prefix {
@@ -260,16 +269,15 @@
       height: 100%;
       display: flex;
       align-items: center;
-      padding: 0 0.8rem 0 1.2rem; /* Adjusted padding to free up space */
+      padding: 0 0.8rem 0 1.2rem; 
       font-size: 16px;
       font-weight: 500;
       color: var(--gold-primary);
       border-right: 1px solid var(--glass-border);
       pointer-events: none;
-      z-index: 2; /* Keeps prefix above autocomplete backgrounds */
+      z-index: 2; 
     }
 
-    /* CRITICAL FIX FOR MOBILE ZOOM: font-size MUST be 16px */
     input {
       width: 100%;
       background: rgba(0, 0, 0, 0.3);
@@ -286,27 +294,15 @@
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    /* Extra padding to prevent numbers from overlapping the +60 border */
-    input.has-prefix {
-      padding-left: 4.5rem; 
-    }
-
-    input::placeholder { 
-      color: rgba(163, 184, 168, 0.4); 
-      font-weight: 300;
-    }
-
+    input.has-prefix { padding-left: 4.5rem; }
+    input::placeholder { color: rgba(163, 184, 168, 0.4); font-weight: 300; }
     input:focus {
       border-color: var(--gold-primary);
       background: rgba(0, 0, 0, 0.5);
       box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1), inset 0 2px 4px rgba(0,0,0,0.3);
     }
-    
-    input:focus + .iico, .input-wrap:focus-within .iico {
-      opacity: 1;
-    }
+    input:focus + .iico, .input-wrap:focus-within .iico { opacity: 1; }
 
-    /* Fix to prevent browser Autocomplete from overriding the dark background completely */
     input:-webkit-autofill,
     input:-webkit-autofill:hover, 
     input:-webkit-autofill:focus, 
@@ -370,18 +366,9 @@
       background: linear-gradient(135deg, #F3D17A 0%, #C7972D 100%);
     }
 
-    .btn-submit:active:not(:disabled) { 
-      transform: translateY(0); 
-      box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
-    }
+    .btn-submit:active:not(:disabled) { transform: translateY(0); box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; filter: grayscale(0.5); }
 
-    .btn-submit:disabled { 
-      opacity: 0.6; 
-      cursor: not-allowed; 
-      filter: grayscale(0.5);
-    }
-
-    /* Loading Spinner */
     .btn-spinner {
       display: none;
       width: 20px; height: 20px;
@@ -391,8 +378,7 @@
       animation: spin 0.8s linear infinite;
     }
 
-    .btn-submit.loading .btn-label,
-    .btn-submit.loading .btn-emoji { display: none; }
+    .btn-submit.loading .btn-label, .btn-submit.loading .btn-emoji { display: none; }
     .btn-submit.loading .btn-spinner { display: block; }
 
     /* Security Note */
@@ -410,7 +396,7 @@
     }
 
     /* ════════════════════════════
-       CLIMBERS LIST SECTION (NEW)
+       CLIMBERS LIST SECTION
     ════════════════════════════ */
     .climbers-section {
       margin-top: 2.5rem;
@@ -428,24 +414,17 @@
       text-align: center;
     }
 
-    /* Times New Roman around 11pt styling */
     .climbers-list {
       font-family: 'Times New Roman', Times, serif;
-      font-size: 11pt; /* Approximately 14px-15px depending on screen */
+      font-size: 11pt; 
       color: var(--text-main);
-      padding-left: 2rem; /* Indentation for 1, 2, 3... */
+      padding-left: 2rem; 
       line-height: 1.8;
       list-style-type: decimal; 
     }
 
-    .climbers-list li {
-      margin-bottom: 0.4rem;
-      color: var(--text-muted);
-    }
-
-    .climbers-list li span.name {
-      color: var(--text-main);
-    }
+    .climbers-list li { margin-bottom: 0.4rem; color: var(--text-muted); }
+    .climbers-list li span.name { color: var(--text-main); }
 
     /* ════════════════════════════
        MODAL
@@ -463,10 +442,7 @@
       padding: 1.5rem;
     }
 
-    .modal-overlay.open {
-      display: flex;
-      animation: fadeIn 0.3s ease both;
-    }
+    .modal-overlay.open { display: flex; animation: fadeIn 0.3s ease both; }
 
     .modal {
       background: var(--glass-bg);
@@ -495,19 +471,8 @@
       box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
     }
 
-    .modal h3 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.4rem;
-      color: #fff;
-      margin-bottom: 0.8rem;
-    }
-
-    .modal p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 2rem;
-    }
+    .modal h3 { font-family: 'Cinzel', serif; font-size: 1.4rem; color: #fff; margin-bottom: 0.8rem; }
+    .modal p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem; }
 
     .btn-close {
       width: 100%;
@@ -524,150 +489,190 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-
-    .btn-close:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(255,255,255,0.2);
-    }
+    .btn-close:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
 
     /* ════════════════════════════
        ANIMATIONS
     ════════════════════════════ */
-    /* Updated: Smooth Slide Down Animation */
     @keyframes slideDownFade {
       from { opacity: 0; transform: translateY(-35px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(30px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes modalPop {
       from { opacity: 0; transform: scale(0.9) translateY(20px); }
       to   { opacity: 1; transform: scale(1) translateY(0); }
     }
-    
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
     }
-    
-    @keyframes spin { 
-      to { transform: rotate(360deg); } 
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ════════════════════════════
-       RESPONSIVE
+       RESPONSIVE BREAKPOINTS
     ════════════════════════════ */
+    
+    /* Small Mobile */
     @media (max-width: 480px) {
       .card { padding: 2rem 1.5rem; }
       .wrapper { padding: 0 1rem 3rem; }
       .hero-title { font-size: 2.4rem; }
     }
+
+    /* Tablets */
+    @media (min-width: 481px) and (max-width: 899px) {
+      .wrapper { max-width: 550px; }
+      .card { padding: 3rem 2.5rem; }
+    }
+
+    /* Desktop & Laptops (Side-by-Side Grid) */
+    @media (min-width: 900px) {
+      .main-layout {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      
+      .hero {
+        width: 45%;
+        height: 100vh;
+        position: sticky; /* Keeps hero in place while scrolling form */
+        top: 0;
+        margin: 0;
+        padding-bottom: 0;
+      }
+
+      .hero-mountains {
+        height: 30vh; /* Taller mountains for large screens */
+      }
+      
+      .hero-gradient-overlay {
+        height: 150px;
+      }
+
+      .wrapper {
+        width: 55%;
+        max-width: none; 
+        margin: 0; 
+        padding: 4rem 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100vh;
+      }
+
+      .card {
+        max-width: 550px;
+        margin: 0 auto;
+        width: 100%;
+        padding: 3rem 3.5rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-<!-- ══ HERO ══ -->
-<div class="hero">
-  <div class="hero-stars"></div>
-  <div class="hero-moon"></div>
-  <div class="hero-mountains"></div>
-  <div class="hero-gradient-overlay"></div>
+<main class="main-layout">
+  
+  <!-- ══ HERO ══ -->
+  <div class="hero">
+    <div class="hero-stars"></div>
+    <div class="hero-moon"></div>
+    <div class="hero-mountains"></div>
+    <div class="hero-gradient-overlay"></div>
 
-  <div class="hero-content">
-    <div class="hero-tag">Sabah, Malaysia</div>
-    <h1 class="hero-title">Aki-Aki <span>Trail</span></h1>
-    <p class="hero-subtitle">3.3 km · 1780 m</p>
+    <div class="hero-content">
+      <div class="hero-tag">Sabah, Malaysia</div>
+      <h1 class="hero-title">Aki-Aki <span>Trail</span></h1>
+      <p class="hero-subtitle">3.3 km · 1780 m</p>
+    </div>
   </div>
-</div>
 
-<!-- ══ FORM ══ -->
-<div class="wrapper">
-  <div class="card">
+  <!-- ══ FORM ══ -->
+  <div class="wrapper">
+    <div class="card">
 
-    <div class="card-header">
-      <h2>Pendaftaran Pendaki</h2>
-      <p>Sila isi maklumat dengan lengkap & betul</p>
+      <div class="card-header">
+        <h2>Pendaftaran Pendaki</h2>
+        <p>Sila isi maklumat dengan lengkap & betul</p>
+      </div>
+
+      <form name="google-sheet-form" novalidate>
+
+        <!-- Nama -->
+        <div class="field">
+          <label for="name">Nama Penuh</label>
+          <div class="input-wrap">
+            <span class="iico">👤</span>
+            <input type="text" id="name" name="Nama Penuh"
+                   placeholder="Cth. ALI BIN ABU" required autocomplete="name"/>
+          </div>
+        </div>
+
+        <!-- IC / Passport -->
+        <div class="field">
+          <label for="ic_passport">
+            No. IC / Passport <span class="badge-optional">Pilihan</span>
+          </label>
+          <div class="input-wrap">
+            <span class="iico">🪪</span>
+            <input type="text" id="ic_passport" name="IC/passport"
+                   placeholder="Cth. 900101-12-3456" autocomplete="off"/>
+          </div>
+        </div>
+
+        <!-- Telefon -->
+        <div class="field">
+          <label for="phone">Nombor Telefon</label>
+          <div class="input-wrap">
+            <span class="prefix">+60</span>
+            <input type="tel" id="phone" name="Nombor Telefon"
+                   class="has-prefix"
+                   placeholder="123456789" autocomplete="tel"/>
+          </div>
+        </div>
+
+        <div class="section-divider">Lokasi</div>
+
+        <!-- Alamat -->
+        <div class="field">
+          <label for="alamat">Kawasan / Daerah</label>
+          <div class="input-wrap">
+            <span class="iico">📍</span>
+            <input type="text" id="alamat" name="Alamat"
+                   value="KENINGAU" placeholder="Cth. KENINGAU" required/>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">
+          <span class="btn-emoji">🏔️</span>
+          <span class="btn-label">Daftar Sekarang</span>
+          <div class="btn-spinner"></div>
+        </button>
+
+      </form>
+
+      <div class="security-note">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Maklumat anda direkod dengan selamat
+      </div>
+
+      <!-- ══ NEW CLIMBERS LIST SECTION ══ -->
+      <div class="climbers-section">
+        <h3 class="climbers-title">Senarai Pendaki Terkini</h3>
+        <ol class="climbers-list" id="climbers-list-container">
+          <li>Sedang memuatkan senarai...</li>
+        </ol>
+      </div>
+
     </div>
-
-    <form name="google-sheet-form" novalidate>
-
-      <!-- Nama -->
-      <div class="field">
-        <label for="name">Nama Penuh</label>
-        <div class="input-wrap">
-          <span class="iico">👤</span>
-          <input type="text" id="name" name="Nama Penuh"
-                 placeholder="Cth. ALI BIN ABU" required autocomplete="name"/>
-        </div>
-      </div>
-
-      <!-- IC / Passport -->
-      <div class="field">
-        <label for="ic_passport">
-          No. IC / Passport <span class="badge-optional">Pilihan</span>
-        </label>
-        <div class="input-wrap">
-          <span class="iico">🪪</span>
-          <input type="text" id="ic_passport" name="IC/passport"
-                 placeholder="Cth. 900101-12-3456" autocomplete="off"/>
-        </div>
-      </div>
-
-      <!-- Telefon -->
-      <div class="field">
-        <label for="phone">Nombor Telefon</label>
-        <div class="input-wrap">
-          <span class="prefix">+60</span>
-          <input type="tel" id="phone" name="Nombor Telefon"
-                 class="has-prefix"
-                 placeholder="123456789" autocomplete="tel"/>
-        </div>
-      </div>
-
-      <div class="section-divider">Lokasi</div>
-
-      <!-- Alamat -->
-      <div class="field">
-        <label for="alamat">Kawasan / Daerah</label>
-        <div class="input-wrap">
-          <span class="iico">📍</span>
-          <input type="text" id="alamat" name="Alamat"
-                 value="KENINGAU" placeholder="Cth. KENINGAU" required/>
-        </div>
-      </div>
-
-      <button type="submit" class="btn-submit" id="submit-btn">
-        <span class="btn-emoji">🏔️</span>
-        <span class="btn-label">Daftar Sekarang</span>
-        <div class="btn-spinner"></div>
-      </button>
-
-    </form>
-
-    <div class="security-note">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Maklumat anda direkod dengan selamat
-    </div>
-
-    <!-- ══ NEW CLIMBERS LIST SECTION ══ -->
-    <div class="climbers-section">
-      <h3 class="climbers-title">Senarai Pendaki Terkini</h3>
-      <ol class="climbers-list" id="climbers-list-container">
-        <li>Sedang memuatkan senarai...</li>
-      </ol>
-    </div>
-
   </div>
-</div>
+
+</main>
 
 <!-- ══ SUCCESS MODAL ══ -->
 <div class="modal-overlay" id="modal-overlay">
@@ -690,15 +695,13 @@
 
   // --- Fetch List of Climbers ---
   function fetchClimbersList() {
-    // Making a GET request to retrieve data
     fetch(SCRIPT_URL)
       .then(response => response.json())
       .then(data => {
-        listContainer.innerHTML = ''; // clear loading text
+        listContainer.innerHTML = ''; 
 
         if (data && data.length > 0) {
           data.forEach(row => {
-            // Adjust 'Nama Penuh' if your Google Script returns a different key name
             const name = row['Nama Penuh'] || row.nama || row[0]; 
             if (name) {
               const li = document.createElement('li');
@@ -712,21 +715,15 @@
       })
       .catch(error => {
         console.error('Error fetching list:', error);
-        listContainer.innerHTML = '<li>Senarai tidak dapat dimuatkan (Pastikan Google Apps Script anda menyokong fungsi GET).</li>';
+        listContainer.innerHTML = '<li>Senarai tidak dapat dimuatkan. Pastikan script Google menyokong fungsi GET.</li>';
       });
   }
 
-  // Load the list immediately when the page loads
   document.addEventListener("DOMContentLoaded", fetchClimbersList);
 
-
   // --- Modal Logic ---
-  function closeModal() {
-    overlay.classList.remove('open');
-  }
-
+  function closeModal() { overlay.classList.remove('open'); }
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-
 
   // --- Form Submission Logic ---
   form.addEventListener('submit', e => {
@@ -740,30 +737,20 @@
 
     const formData = new FormData(form);
 
-    // 1. Format Nama
     formData.set('Nama Penuh', (formData.get('Nama Penuh') || '').toString().trim().toUpperCase());
-
-    // 2. Format Alamat
     formData.set('Alamat', (formData.get('Alamat') || '').toString().trim().toUpperCase());
 
-    // 3. Format IC 
     const ic = formData.get('IC/passport') || '';
     if (ic.toString().trim() === '') formData.set('IC/passport', 'ISI KEMUDIAN');
 
-    // 4. Format Phone
     let rawPhone = formData.get('Nombor Telefon') || '';
     let cleanPhone = rawPhone.toString().replace(/\D/g, ''); 
-
-    if (cleanPhone.startsWith('0')) {
-        cleanPhone = cleanPhone.substring(1); 
-    }
-
+    if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1); 
     const finalPhone = cleanPhone ? ('60' + cleanPhone) : '';
 
     formData.set('No Telefon', finalPhone);
     formData.set('Nombor Telefon', finalPhone);
 
-    // Send POST Request
     fetch(SCRIPT_URL, { 
         method: 'POST', 
         body: formData, 
@@ -772,7 +759,6 @@
       .then(() => {
         audio.play().catch(() => {});
 
-        // Personalize the success message with their first name
         document.getElementById('modal-name').innerText = 'Terima Kasih, ' + nameVal.split(' ')[0] + '!';
         overlay.classList.add('open');
 
@@ -782,8 +768,7 @@
         submitBtn.disabled = false;
         submitBtn.classList.remove('loading');
 
-        // Refetch the list right after a successful submission so the new name shows up
-        setTimeout(fetchClimbersList, 2000); // 2 second delay to let Google Sheet update
+        setTimeout(fetchClimbersList, 2000); 
       })
       .catch(() => {
         alert('Ralat rangkaian. Sila cuba semula.');
