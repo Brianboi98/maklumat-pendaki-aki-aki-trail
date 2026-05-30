@@ -177,12 +177,13 @@
       border-radius: 24px;
       padding: 2.5rem 2rem;
       box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
-      animation: fadeUp 0.8s 0.2s ease-out both;
+      animation: fadeUp 0.8s ease-out both;
     }
 
     .card-header {
       text-align: center;
       margin-bottom: 2.2rem;
+      animation: slideDownFade 0.8s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
 
     .card-header h2 {
@@ -200,17 +201,19 @@
     }
 
     /* ════════════════════════════
-       FORM FIELDS & INPUTS (Sleek UI + No Zoom fix)
+       FORM FIELDS & INPUTS
     ════════════════════════════ */
     .field {
       margin-bottom: 1.4rem;
-      animation: fadeUp 0.6s ease-out both;
+      animation: slideDownFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
-    .field:nth-child(1) { animation-delay: 0.3s; }
-    .field:nth-child(2) { animation-delay: 0.4s; }
-    .field:nth-child(3) { animation-delay: 0.5s; }
-    .field:nth-child(4) { animation-delay: 0.6s; }
-    .field:nth-child(5) { animation-delay: 0.7s; }
+    
+    /* Staggered cascading delay for the slide down effect */
+    .field:nth-of-type(1) { animation-delay: 0.3s; }
+    .field:nth-of-type(2) { animation-delay: 0.4s; }
+    .field:nth-of-type(3) { animation-delay: 0.5s; }
+    .section-divider { animation-delay: 0.6s; }
+    .field:nth-of-type(4) { animation-delay: 0.7s; }
 
     label {
       display: block;
@@ -249,6 +252,7 @@
       opacity: 0.7;
       pointer-events: none;
       transition: opacity 0.3s;
+      z-index: 2; /* Keeps icon above autocomplete backgrounds */
     }
 
     .prefix {
@@ -257,12 +261,13 @@
       height: 100%;
       display: flex;
       align-items: center;
-      padding: 0 1rem;
-      font-size: 16px; /* Match input size */
+      padding: 0 0.8rem 0 1.2rem; /* Adjusted padding to free up space */
+      font-size: 16px;
       font-weight: 500;
       color: var(--gold-primary);
       border-right: 1px solid var(--glass-border);
       pointer-events: none;
+      z-index: 2; /* Keeps prefix above autocomplete backgrounds */
     }
 
     /* CRITICAL FIX FOR MOBILE ZOOM: font-size MUST be 16px */
@@ -273,7 +278,7 @@
       border-radius: 14px;
       color: var(--text-main);
       font-family: 'Jost', sans-serif;
-      font-size: 16px; /* Prevents iOS Safari Zoom */
+      font-size: 16px; 
       font-weight: 400;
       padding: 1rem 1.2rem 1rem 3.2rem;
       outline: none;
@@ -282,8 +287,9 @@
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
     }
 
+    /* Extra padding to prevent numbers from overlapping the +60 border */
     input.has-prefix {
-      padding-left: 3.5rem;
+      padding-left: 4.5rem; 
     }
 
     input::placeholder { 
@@ -301,6 +307,16 @@
       opacity: 1;
     }
 
+    /* Fix to prevent browser Autocomplete from overriding the dark background completely */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px #0a1f14 inset !important;
+      -webkit-text-fill-color: #F4F1E1 !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
     .section-divider {
       display: flex;
       align-items: center;
@@ -310,6 +326,7 @@
       font-size: 0.65rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
+      animation: slideDownFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
 
     .section-divider::before, .section-divider::after {
@@ -343,7 +360,7 @@
       gap: 0.6rem;
       box-shadow: 0 8px 20px rgba(212, 175, 55, 0.25), inset 0 1px 1px rgba(255,255,255,0.4);
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      animation: fadeUp 0.6s 0.8s ease-out both;
+      animation: slideDownFade 0.8s 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
       position: relative;
       overflow: hidden;
     }
@@ -390,6 +407,45 @@
       justify-content: center;
       gap: 0.4rem;
       opacity: 0.6;
+      animation: slideDownFade 0.8s 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    /* ════════════════════════════
+       CLIMBERS LIST SECTION (NEW)
+    ════════════════════════════ */
+    .climbers-section {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--glass-border);
+      animation: slideDownFade 0.8s 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .climbers-title {
+      font-size: 0.75rem;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+
+    /* Times New Roman around 11pt styling */
+    .climbers-list {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11pt; /* Approximately 14px-15px depending on screen */
+      color: var(--text-main);
+      padding-left: 2rem; /* Indentation for 1, 2, 3... */
+      line-height: 1.8;
+      list-style-type: decimal; 
+    }
+
+    .climbers-list li {
+      margin-bottom: 0.4rem;
+      color: var(--text-muted);
+    }
+
+    .climbers-list li span.name {
+      color: var(--text-main);
     }
 
     /* ════════════════════════════
@@ -478,22 +534,32 @@
     /* ════════════════════════════
        ANIMATIONS
     ════════════════════════════ */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
+    /* Updated: Smooth Slide Down Animation */
+    @keyframes slideDownFade {
+      from { opacity: 0; transform: translateY(-35px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    
     @keyframes fadeIn {
       from { opacity: 0; }
       to   { opacity: 1; }
     }
+    
     @keyframes modalPop {
       from { opacity: 0; transform: scale(0.9) translateY(20px); }
       to   { opacity: 1; transform: scale(1) translateY(0); }
     }
+    
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
     }
+    
     @keyframes spin { 
       to { transform: rotate(360deg); } 
     }
@@ -593,6 +659,14 @@
       Maklumat anda direkod dengan selamat
     </div>
 
+    <!-- ══ NEW CLIMBERS LIST SECTION ══ -->
+    <div class="climbers-section">
+      <h3 class="climbers-title">Senarai Pendaki Terkini</h3>
+      <ol class="climbers-list" id="climbers-list-container">
+        <li>Sedang memuatkan senarai...</li>
+      </ol>
+    </div>
+
   </div>
 </div>
 
@@ -611,15 +685,51 @@
   const form      = document.forms['google-sheet-form'];
   const submitBtn = document.getElementById('submit-btn');
   const overlay   = document.getElementById('modal-overlay');
+  const listContainer = document.getElementById('climbers-list-container');
 
   const audio = new Audio('https://raw.githubusercontent.com/Brianboi98/maklumat-pendaki-aki-aki-trail/refs/heads/main/ElevenLabs_2026-05-28T14_33_50_Amelia%20-%20young%20and%20enthusiastic_pvc_sp100_s50_sb48_se0_m2.mp3');
 
+  // --- Fetch List of Climbers ---
+  function fetchClimbersList() {
+    // Making a GET request to retrieve data
+    fetch(SCRIPT_URL)
+      .then(response => response.json())
+      .then(data => {
+        listContainer.innerHTML = ''; // clear loading text
+
+        if (data && data.length > 0) {
+          data.forEach(row => {
+            // Adjust 'Nama Penuh' if your Google Script returns a different key name
+            const name = row['Nama Penuh'] || row.nama || row[0]; 
+            if (name) {
+              const li = document.createElement('li');
+              li.innerHTML = `<span class="name">${name}</span>`;
+              listContainer.appendChild(li);
+            }
+          });
+        } else {
+          listContainer.innerHTML = '<li>Belum ada pendaftaran hari ini.</li>';
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching list:', error);
+        listContainer.innerHTML = '<li>Senarai tidak dapat dimuatkan (Pastikan Google Apps Script anda menyokong fungsi GET).</li>';
+      });
+  }
+
+  // Load the list immediately when the page loads
+  document.addEventListener("DOMContentLoaded", fetchClimbersList);
+
+
+  // --- Modal Logic ---
   function closeModal() {
     overlay.classList.remove('open');
   }
 
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 
+
+  // --- Form Submission Logic ---
   form.addEventListener('submit', e => {
     e.preventDefault();
 
@@ -654,6 +764,7 @@
     formData.set('No Telefon', finalPhone);
     formData.set('Nombor Telefon', finalPhone);
 
+    // Send POST Request
     fetch(SCRIPT_URL, { 
         method: 'POST', 
         body: formData, 
@@ -671,6 +782,9 @@
 
         submitBtn.disabled = false;
         submitBtn.classList.remove('loading');
+
+        // Refetch the list right after a successful submission so the new name shows up
+        setTimeout(fetchClimbersList, 2000); // 2 second delay to let Google Sheet update
       })
       .catch(() => {
         alert('Ralat rangkaian. Sila cuba semula.');
