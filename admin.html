@@ -1,5 +1,4 @@
-```html
-<!DOCTYPE html>
+<DOCTYPE html>
 <html lang="ms">
 <head>
   <meta charset="UTF-8"/>
@@ -18,6 +17,7 @@
       --gold-primary: #D4AF37;
       --text-main: #F4F1E1;
       --text-muted: #A3B8A8;
+      --danger: #ff4b4b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,9 +28,73 @@
       color: var(--text-main);
       padding: 1.5rem 1rem;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Header Section */
+    /* ════ LOGIN SCREEN ════ */
+    #login-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .login-box {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 350px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .login-box h2 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      outline: none;
+    }
+
+    .login-box input:focus { border-color: var(--gold-primary); }
+
+    .login-box button {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: none;
+      background: var(--gold-primary);
+      color: #000;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    #login-error { color: var(--danger); font-size: 0.8rem; margin-top: 0.8rem; display: none; }
+
+    /* ════ ADMIN DASHBOARD ════ */
+    #admin-dashboard {
+      display: none; 
+      flex-direction: column;
+      width: 100%;
+    }
+
     header {
       text-align: center;
       margin-bottom: 2rem;
@@ -38,13 +102,7 @@
       border-bottom: 1px solid var(--glass-border);
     }
 
-    h1 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.8rem;
-      color: #fff;
-      margin-bottom: 0.5rem;
-    }
-
+    h1 { font-family: 'Cinzel', serif; font-size: 1.8rem; color: #fff; margin-bottom: 0.5rem; }
     h1 span { color: var(--gold-primary); }
 
     .stats {
@@ -58,15 +116,14 @@
       color: var(--gold-primary);
     }
 
-    /* Container for Hikers */
     #hikers-container {
       display: grid;
       gap: 1rem;
       max-width: 600px;
       margin: 0 auto;
+      width: 100%;
     }
 
-    /* Hiker Cards (Mobile Friendly) */
     .hiker-card {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
@@ -74,6 +131,7 @@
       padding: 1.2rem;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
       animation: slideUp 0.4s ease-out both;
+      position: relative;
     }
 
     .card-header {
@@ -85,77 +143,124 @@
       padding-bottom: 0.8rem;
     }
 
-    .hiker-name {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--gold-primary);
-    }
+    .hiker-name { font-size: 1.1rem; font-weight: 600; color: var(--gold-primary); padding-right: 10px;}
+    .hiker-time { font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 4px; }
+    
+    .info-row { display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .info-icon { width: 24px; opacity: 0.7; }
+    .info-value { font-weight: 500; }
 
-    .hiker-time {
+    a.phone-link { color: #79BFA1; text-decoration: none; font-weight: 600; }
+    
+    .loading-msg { text-align: center; color: var(--text-muted); font-style: italic; margin-top: 2rem; }
+
+    /* DELETE BUTTON */
+    .btn-delete {
+      background: rgba(255, 75, 75, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(255, 75, 75, 0.3);
+      border-radius: 8px;
+      padding: 0.3rem 0.6rem;
       font-size: 0.75rem;
-      color: var(--text-muted);
-      text-align: right;
+      font-family: 'Jost', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
     }
+    .btn-delete:hover { background: rgba(255, 75, 75, 0.25); }
 
-    .info-row {
-      display: flex;
+    /* ════ DELETE MODAL ════ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
       align-items: center;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
+      justify-content: center;
+      z-index: 9999;
+      padding: 1.5rem;
     }
 
-    .info-icon {
-      width: 24px;
-      opacity: 0.7;
+    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease both; }
+
+    .modal {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-top: 1px solid rgba(255, 75, 75, 0.4);
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      width: 100%;
+      max-width: 320px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
     }
 
-    .info-value {
-      font-weight: 500;
-    }
+    .modal h3 { font-family: 'Cinzel', serif; color: var(--danger); margin-bottom: 0.5rem; }
+    .modal p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
 
-    /* Make phone numbers clickable and look like links */
-    a.phone-link {
-      color: #79BFA1;
-      text-decoration: none;
+    .modal-actions { display: flex; gap: 0.5rem; }
+    .modal-actions button {
+      flex: 1;
+      padding: 0.8rem;
+      border-radius: 10px;
       font-weight: 600;
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      border: none;
     }
     
-    a.phone-link:hover { text-decoration: underline; }
+    .btn-cancel { background: transparent; border: 1px solid var(--text-muted) !important; color: var(--text-main); }
+    .btn-confirm { background: var(--danger); color: #fff; }
 
-    /* Loading state */
-    .loading-msg {
-      text-align: center;
-      color: var(--text-muted);
-      font-style: italic;
-      margin-top: 2rem;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Aki-Aki <span>Admin</span></h1>
-    <div class="stats" id="total-count">Jumlah Pendaki: 0</div>
-  </header>
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen">
+    <div class="login-box">
+      <h2>Admin Log Masuk</h2>
+      <input type="password" id="password-input" placeholder="Kata Laluan" />
+      <button onclick="checkPassword()">Masuk</button>
+      <div id="login-error">Kata laluan salah!</div>
+    </div>
+  </div>
 
-  <main id="hikers-container">
-    <div class="loading-msg">Memuatkan data dari awan...</div>
-  </main>
+  <!-- ADMIN DASHBOARD -->
+  <div id="admin-dashboard">
+    <header>
+      <h1>Aki-Aki <span>Admin</span></h1>
+      <div class="stats" id="total-count">Jumlah Pendaki: 0</div>
+    </header>
 
-  <!-- ======================================================================= -->
-  <!-- FIREBASE SCRIPT                                                         -->
-  <!-- ======================================================================= -->
+    <main id="hikers-container">
+      <div class="loading-msg">Memuatkan data...</div>
+    </main>
+  </div>
+
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div class="modal-overlay" id="delete-modal">
+    <div class="modal">
+      <h3>Padam Rekod?</h3>
+      <p>Adakah anda pasti mahu memadam rekod pendaki ini dari pangkalan data? Tindakan ini tidak boleh dibatalkan.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeDeleteModal()">Batal</button>
+        <button class="btn-confirm" onclick="executeDelete()">Ya, Padam</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, orderBy } 
+    import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc } 
       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // 1. PASTE YOUR EXACT SAME KEYS HERE
+    // 1. YOUR NEW PASSWORD
+    const ADMIN_PASSWORD = "Boi"; 
+
+    // 2. PASTE YOUR FULL FIREBASE KEYS HERE
     const firebaseConfig = {
       apiKey: "PASTE_YOUR_FULL_API_KEY_HERE", 
       authDomain: "boi-linopod.firebaseapp.com",
@@ -166,73 +271,127 @@
       measurementId: "G-CESMEGMT3L"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    let app, db, unsubscribe;
+    let pendingDeleteId = null;
 
-    const container = document.getElementById('hikers-container');
-    const countDisplay = document.getElementById('total-count');
-
-    // 2. FETCH DATA IN REAL-TIME
-    const hikersQuery = query(collection(db, "pendaki"), orderBy("timestamp", "desc"));
-
-    onSnapshot(hikersQuery, (snapshot) => {
-      container.innerHTML = ''; // Clear loading message
-      countDisplay.innerText = `Jumlah Pendaki: ${snapshot.size}`;
-
-      if (snapshot.empty) {
-        container.innerHTML = '<div class="loading-msg">Belum ada rekod.</div>';
-        return;
+    // --- LOGIN LOGIC ---
+    window.checkPassword = function() {
+      const input = document.getElementById('password-input').value;
+      
+      // Check password (case-sensitive)
+      if (input === ADMIN_PASSWORD) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-dashboard').style.display = 'flex';
+        startFirebase(); 
+      } else {
+        document.getElementById('login-error').style.display = 'block';
       }
+    }
 
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        
-        // Format the Date to look nice (e.g., "30 May 2026, 08:30 AM")
-        let timeString = "Baru sahaja";
-        if (data.timestamp) {
-          const dateObj = data.timestamp.toDate();
-          timeString = dateObj.toLocaleString('ms-MY', { 
-            day: 'numeric', month: 'short', year: 'numeric', 
-            hour: '2-digit', minute: '2-digit' 
-          });
+    document.getElementById('password-input').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') window.checkPassword();
+    });
+
+    // --- FIREBASE DATA LOGIC ---
+    function startFirebase() {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+
+      const container = document.getElementById('hikers-container');
+      const countDisplay = document.getElementById('total-count');
+
+      const hikersQuery = query(collection(db, "pendaki"), orderBy("timestamp", "desc"));
+
+      unsubscribe = onSnapshot(hikersQuery, (snapshot) => {
+        container.innerHTML = ''; 
+        countDisplay.innerText = `Jumlah Pendaki: ${snapshot.size}`;
+
+        if (snapshot.empty) {
+          container.innerHTML = '<div class="loading-msg">Belum ada rekod.</div>';
+          return;
         }
 
-        // Create the Card HTML
-        const card = document.createElement('div');
-        card.className = 'hiker-card';
-        card.innerHTML = `
-          <div class="card-header">
-            <div class="hiker-name">${data.name || 'Tiada Nama'}</div>
-            <div class="hiker-time">${timeString}</div>
-          </div>
+        snapshot.forEach((firebaseDoc) => {
+          const data = firebaseDoc.data();
+          const docId = firebaseDoc.id; 
           
-          <div class="info-row">
-            <span class="info-icon">🪪</span>
-            <span class="info-value">${data.ic || '-'}</span>
-          </div>
-          
-          <div class="info-row">
-            <span class="info-icon">📞</span>
-            <span class="info-value">
-              <!-- tel: makes it clickable on mobile! -->
-              <a href="tel:${data.phone}" class="phone-link">${data.phone || '-'}</a>
-            </span>
-          </div>
-          
-          <div class="info-row">
-            <span class="info-icon">📍</span>
-            <span class="info-value">${data.address || '-'}</span>
-          </div>
-        `;
-        
-        container.appendChild(card);
+          let timeString = "Baru sahaja";
+          if (data.timestamp) {
+            const dateObj = data.timestamp.toDate();
+            timeString = dateObj.toLocaleString('ms-MY', { 
+              day: 'numeric', month: 'short', year: 'numeric', 
+              hour: '2-digit', minute: '2-digit' 
+            });
+          }
+
+          const card = document.createElement('div');
+          card.className = 'hiker-card';
+          card.innerHTML = `
+            <div class="card-header">
+              <div>
+                <div class="hiker-name">${data.name || 'Tiada Nama'}</div>
+                <span class="hiker-time">${timeString}</span>
+              </div>
+              <button class="btn-delete" onclick="promptDelete('${docId}')">🗑️ Padam</button>
+            </div>
+            
+            <div class="info-row">
+              <span class="info-icon">🪪</span>
+              <span class="info-value">${data.ic || '-'}</span>
+            </div>
+            
+            <div class="info-row">
+              <span class="info-icon">📞</span>
+              <span class="info-value">
+                <a href="tel:${data.phone}" class="phone-link">${data.phone || '-'}</a>
+              </span>
+            </div>
+            
+            <div class="info-row">
+              <span class="info-icon">📍</span>
+              <span class="info-value">${data.address || '-'}</span>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }, (error) => {
+        console.error("Error reading database:", error);
+        container.innerHTML = '<div class="loading-msg" style="color: red;">Gagal memuatkan data.</div>';
       });
-    }, (error) => {
-      console.error("Error reading database:", error);
-      container.innerHTML = '<div class="loading-msg" style="color: red;">Gagal memuatkan data. Sila semak console (F12).</div>';
+    }
+
+    // --- DELETE LOGIC ---
+    const deleteModal = document.getElementById('delete-modal');
+
+    window.promptDelete = function(id) {
+      pendingDeleteId = id;
+      deleteModal.classList.add('open');
+    }
+
+    window.closeDeleteModal = function() {
+      pendingDeleteId = null;
+      deleteModal.classList.remove('open');
+    }
+
+    window.executeDelete = async function() {
+      if (!pendingDeleteId) return;
+
+      try {
+        await deleteDoc(doc(db, "pendaki", pendingDeleteId));
+      } catch (error) {
+        console.error("Ralat memadam rekod: ", error);
+        alert("Gagal memadam rekod. Sila cuba lagi.");
+      } finally {
+        closeDeleteModal();
+      }
+    }
+
+    deleteModal.addEventListener('click', e => { 
+      if (e.target === deleteModal) window.closeDeleteModal(); 
     });
+
   </script>
 </body>
 </html>
 
-```
+
