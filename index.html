@@ -613,7 +613,7 @@
       <!-- ══ DIVIDER ══ -->
       <div class="section-divider">Daftar Baru</div>
 
-      <form name="google-sheet-form" novalidate>
+      <form id="hiker-form" name="google-sheet-form" novalidate>
 
         <!-- Nama -->
         <div class="field">
@@ -668,7 +668,7 @@
 
       <div class="security-note">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Maklumat anda direkod dengan selamat
+        Maklumat anda direkod dengan selamat dalam awan (Cloud)
       </div>
 
     </div>
@@ -686,54 +686,66 @@
   </div>
 </div>
 
-<script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwGoMEpV5NTiT4Blywk1uDOqRJ0FJ-u4GmyWv9g-K174JW3mcouO9tCq7DAtABnQZpT9A/exec';
-  const form      = document.forms['google-sheet-form'];
-  const submitBtn = document.getElementById('submit-btn');
-  const overlay   = document.getElementById('modal-overlay');
-  const listContainer = document.getElementById('climbers-list-container');
+<!-- ======================================================================= -->
+<!-- FIREBASE DATABASE SCRIPT                                                -->
+<!-- ======================================================================= -->
+<script type="module">
+  // 1. Import Firebase tools
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } 
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+  // 2. YOUR FIREBASE KEYS (PASTE YOURS HERE)
+  const firebaseConfig = {
+    apiKey: "PASTE_YOUR_FULL_API_KEY_HERE", 
+    authDomain: "boi-linopod.firebaseapp.com",
+    projectId: "boi-linopod",
+    storageBucket: "boi-linopod.firebasestorage.app",
+    messagingSenderId: "219749551037",
+    appId: "PASTE_YOUR_FULL_APP_ID_HERE", 
+    measurementId: "G-CESMEGMT3L"
+  };
+
+  // 3. Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // HTML Elements
+  const form = document.getElementById('hiker-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const overlay = document.getElementById('modal-overlay');
+  const listContainer = document.getElementById('climbers-list-container');
   const audio = new Audio('https://raw.githubusercontent.com/Brianboi98/maklumat-pendaki-aki-aki-trail/refs/heads/main/ElevenLabs_2026-05-28T14_33_50_Amelia%20-%20young%20and%20enthusiastic_pvc_sp100_s50_sb48_se0_m2.mp3');
 
-  // --- Fetch List of Climbers ---
-  function fetchClimbersList() {
+  // --- 4. FETCH CLIMBERS REAL-TIME (onSnapshot) ---
+  // This looks at a collection called "pendaki" and orders it from newest to oldest
+  const hikersQuery = query(collection(db, "pendaki"), orderBy("timestamp", "desc"));
+  
+  onSnapshot(hikersQuery, (snapshot) => {
     listContainer.classList.remove('grid-active');
-    listContainer.innerHTML = '<li class="status-msg">Sedang memuatkan senarai...</li>';
+    listContainer.innerHTML = ''; 
 
-    fetch(SCRIPT_URL)
-      .then(response => response.json())
-      .then(data => {
-        listContainer.innerHTML = ''; 
-
-        if (data && data.length > 0) {
-          listContainer.classList.add('grid-active'); 
-          
-          data.forEach(row => {
-            const name = row['Nama Penuh'] || row.nama || row[0]; 
-            if (name) {
-              const li = document.createElement('li');
-              li.innerHTML = `<span class="name">${name}</span>`;
-              listContainer.appendChild(li);
-            }
-          });
-        } else {
-          listContainer.innerHTML = '<li class="status-msg">Belum ada pendaftaran hari ini.</li>';
+    if (snapshot.empty) {
+      listContainer.innerHTML = '<li class="status-msg">Belum ada pendaftaran hari ini.</li>';
+    } else {
+      listContainer.classList.add('grid-active'); 
+      
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.name) {
+          const li = document.createElement('li');
+          li.innerHTML = `<span class="name">${data.name}</span>`;
+          listContainer.appendChild(li);
         }
-      })
-      .catch(error => {
-        console.error('Error fetching list:', error);
-        listContainer.innerHTML = '<li class="status-msg">Senarai tidak dapat dimuatkan. Pastikan script Google menyokong fungsi GET.</li>';
       });
-  }
+    }
+  }, (error) => {
+    console.error('Error fetching list from Firebase:', error);
+    listContainer.innerHTML = '<li class="status-msg">Gagal memuatkan senarai.</li>';
+  });
 
-  document.addEventListener("DOMContentLoaded", fetchClimbersList);
-
-  // --- Modal Logic ---
-  function closeModal() { overlay.classList.remove('open'); }
-  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-
-  // --- Form Submission Logic ---
-  form.addEventListener('submit', e => {
+  // --- 5. SAVE NEW CLIMBER ---
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const nameVal = document.getElementById('name').value.trim();
@@ -742,48 +754,55 @@
     submitBtn.disabled = true;
     submitBtn.classList.add('loading');
 
+    // Get Form Data
     const formData = new FormData(form);
+    const uppercaseName = (formData.get('Nama Penuh') || '').toString().trim().toUpperCase();
+    const uppercaseAddress = (formData.get('Alamat') || '').toString().trim().toUpperCase();
 
-    formData.set('Nama Penuh', (formData.get('Nama Penuh') || '').toString().trim().toUpperCase());
-    formData.set('Alamat', (formData.get('Alamat') || '').toString().trim().toUpperCase());
-
-    const ic = formData.get('IC/passport') || '';
-    if (ic.toString().trim() === '') formData.set('IC/passport', 'ISI KEMUDIAN');
+    const icRaw = formData.get('IC/passport') || '';
+    const finalIc = icRaw.toString().trim() === '' ? 'ISI KEMUDIAN' : icRaw.toString().trim();
 
     let rawPhone = formData.get('Nombor Telefon') || '';
     let cleanPhone = rawPhone.toString().replace(/\D/g, ''); 
     if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1); 
     const finalPhone = cleanPhone ? ('60' + cleanPhone) : '';
 
-    formData.set('No Telefon', finalPhone);
-    formData.set('Nombor Telefon', finalPhone);
-
-    fetch(SCRIPT_URL, { 
-        method: 'POST', 
-        body: formData, 
-        mode: 'no-cors' 
-    })
-      .then(() => {
-        audio.play().catch(() => {});
-
-        document.getElementById('modal-name').innerText = 'Terima Kasih, ' + nameVal.split(' ')[0] + '!';
-        overlay.classList.add('open');
-
-        form.reset();
-        document.getElementById('alamat').value = 'KENINGAU';
-
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('loading');
-
-        setTimeout(fetchClimbersList, 2000); 
-      })
-      .catch(() => {
-        alert('Ralat rangkaian. Sila cuba semula.');
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('loading');
+    try {
+      // Save to Firebase!
+      await addDoc(collection(db, "pendaki"), {
+        name: uppercaseName,
+        ic: finalIc,
+        phone: finalPhone,
+        address: uppercaseAddress,
+        timestamp: serverTimestamp() // This automatically marks the exact time they registered
       });
+
+      // Play Sound & Show Modal
+      audio.play().catch(() => {});
+      document.getElementById('modal-name').innerText = 'Terima Kasih, ' + uppercaseName.split(' ')[0] + '!';
+      overlay.classList.add('open');
+
+      // Reset Form
+      form.reset();
+      document.getElementById('alamat').value = 'KENINGAU';
+
+    } catch (error) {
+      console.error("Error saving document: ", error);
+      alert('Ralat rangkaian. Sila cuba semula.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('loading');
+    }
+  });
+
+  // Attach Modal Logic to the Window object so the HTML button can find it
+  window.closeModal = function() {
+    overlay.classList.remove('open');
+  };
+
+  overlay.addEventListener('click', e => { 
+    if (e.target === overlay) window.closeModal(); 
   });
 </script>
 </body>
 </html>
-
