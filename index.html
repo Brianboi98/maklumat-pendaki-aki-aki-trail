@@ -171,7 +171,7 @@
     .wrapper {
       width: 100%;
       max-width: 480px;
-      margin: -60px auto 0; /* Overlaps hero on mobile */
+      margin: -60px auto 0;
       padding: 0 1.25rem 4rem;
       position: relative;
       z-index: 10;
@@ -189,9 +189,10 @@
       animation: fadeUp 0.8s ease-out both;
     }
 
+    /* Tightened Header Spacing */
     .card-header {
       text-align: center;
-      margin-bottom: 2.2rem;
+      margin-bottom: 1rem; /* Was 1.5rem */
       animation: slideDownFade 0.8s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
 
@@ -200,7 +201,7 @@
       font-size: 1.1rem;
       color: #fff;
       letter-spacing: 0.1em;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.2rem; /* Tighter */
     }
 
     .card-header p {
@@ -210,18 +211,107 @@
     }
 
     /* ════════════════════════════
+       CLIMBERS LIST SECTION (COMPACT)
+    ════════════════════════════ */
+    .climbers-section {
+      margin-bottom: 0.5rem; /* Reduced from 2rem to save space */
+      animation: slideDownFade 0.8s 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .climbers-title {
+      font-size: 0.7rem; /* Slightly smaller */
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem; /* Reduced from 1rem */
+      text-align: center;
+    }
+
+    .climbers-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: center; 
+    }
+
+    .climbers-list .status-msg {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Tighter Grid */
+    .climbers-list.grid-active {
+      display: grid;
+      grid-template-rows: repeat(5, auto); 
+      grid-auto-flow: column; 
+      grid-auto-columns: max-content; 
+      gap: 0.15rem 1rem; /* Greatly reduced row and column gaps */
+      counter-reset: climber-counter;
+      overflow-x: auto; 
+      padding-bottom: 0.25rem; 
+      text-align: left;
+    }
+
+    .climbers-list.grid-active li {
+      counter-increment: climber-counter;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 10.5pt; /* Slightly smaller */
+      line-height: 1.2; /* Tighter vertical spacing */
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      white-space: nowrap; 
+    }
+
+    .climbers-list.grid-active li::before {
+      content: counter(climber-counter) ". ";
+      color: var(--text-muted);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      margin-right: 0.3rem; /* Tighter number spacing */
+      font-weight: 500;
+    }
+
+    /* Sleek Scrollbar */
+    .climbers-list.grid-active::-webkit-scrollbar { height: 3px; }
+    .climbers-list.grid-active::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+    .climbers-list.grid-active::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+
+    /* Divider */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 1rem 0 1.2rem; /* Reduced from 2rem 0 1.5rem */
+      color: rgba(212, 175, 55, 0.5);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: slideDownFade 0.8s 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .section-divider::before, .section-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .section-divider::before { margin-right: 1em; }
+    .section-divider::after { margin-left: 1em; }
+
+
+    /* ════════════════════════════
        FORM FIELDS & INPUTS
     ════════════════════════════ */
     .field {
-      margin-bottom: 1.4rem;
+      margin-bottom: 1.2rem; /* Slightly reduced */
       animation: slideDownFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
     
-    .field:nth-of-type(1) { animation-delay: 0.3s; }
-    .field:nth-of-type(2) { animation-delay: 0.4s; }
-    .field:nth-of-type(3) { animation-delay: 0.5s; }
-    .section-divider { animation-delay: 0.6s; }
-    .field:nth-of-type(4) { animation-delay: 0.7s; }
+    .field:nth-of-type(1) { animation-delay: 0.5s; }
+    .field:nth-of-type(2) { animation-delay: 0.6s; }
+    .field:nth-of-type(3) { animation-delay: 0.7s; }
+    .field:nth-of-type(4) { animation-delay: 0.8s; }
 
     label {
       display: block;
@@ -230,7 +320,7 @@
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem; /* Slightly reduced */
       padding-left: 0.2rem;
     }
 
@@ -287,7 +377,7 @@
       font-family: 'Jost', sans-serif;
       font-size: 16px; 
       font-weight: 400;
-      padding: 1rem 1.2rem 1rem 3.2rem;
+      padding: 0.9rem 1.2rem 0.9rem 3.2rem; /* Slightly reduced padding */
       outline: none;
       transition: all 0.3s ease;
       -webkit-appearance: none;
@@ -312,33 +402,13 @@
       transition: background-color 5000s ease-in-out 0s;
     }
 
-    .section-divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      margin: 2rem 0 1.5rem;
-      color: rgba(212, 175, 55, 0.5);
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      animation: slideDownFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-    }
-
-    .section-divider::before, .section-divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid var(--glass-border);
-    }
-    .section-divider::before { margin-right: 1em; }
-    .section-divider::after { margin-left: 1em; }
-
     /* ════════════════════════════
        BUTTON
     ════════════════════════════ */
     .btn-submit {
       width: 100%;
-      margin-top: 1rem;
-      padding: 1.1rem;
+      margin-top: 0.8rem;
+      padding: 1rem;
       background: linear-gradient(135deg, #E6C265 0%, #B38622 100%);
       color: var(--bg-deep);
       font-family: 'Cinzel', serif;
@@ -355,7 +425,7 @@
       gap: 0.6rem;
       box-shadow: 0 8px 20px rgba(212, 175, 55, 0.25), inset 0 1px 1px rgba(255,255,255,0.4);
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      animation: slideDownFade 0.8s 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      animation: slideDownFade 0.8s 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
       position: relative;
       overflow: hidden;
     }
@@ -384,7 +454,7 @@
     /* Security Note */
     .security-note {
       text-align: center;
-      margin-top: 1.5rem;
+      margin-top: 1.2rem;
       font-size: 0.65rem;
       color: var(--text-muted);
       display: flex;
@@ -392,39 +462,9 @@
       justify-content: center;
       gap: 0.4rem;
       opacity: 0.6;
-      animation: slideDownFade 0.8s 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-    }
-
-    /* ════════════════════════════
-       CLIMBERS LIST SECTION
-    ════════════════════════════ */
-    .climbers-section {
-      margin-top: 2.5rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--glass-border);
       animation: slideDownFade 0.8s 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
 
-    .climbers-title {
-      font-size: 0.75rem;
-      color: var(--gold-primary);
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      margin-bottom: 1.2rem;
-      text-align: center;
-    }
-
-    .climbers-list {
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 11pt; 
-      color: var(--text-main);
-      padding-left: 2rem; 
-      line-height: 1.8;
-      list-style-type: decimal; 
-    }
-
-    .climbers-list li { margin-bottom: 0.4rem; color: var(--text-muted); }
-    .climbers-list li span.name { color: var(--text-main); }
 
     /* ════════════════════════════
        MODAL
@@ -516,61 +556,22 @@
     /* ════════════════════════════
        RESPONSIVE BREAKPOINTS
     ════════════════════════════ */
-    
-    /* Small Mobile */
     @media (max-width: 480px) {
       .card { padding: 2rem 1.5rem; }
       .wrapper { padding: 0 1rem 3rem; }
       .hero-title { font-size: 2.4rem; }
     }
-
-    /* Tablets */
     @media (min-width: 481px) and (max-width: 899px) {
       .wrapper { max-width: 550px; }
       .card { padding: 3rem 2.5rem; }
     }
-
-    /* Desktop & Laptops (Side-by-Side Grid) */
     @media (min-width: 900px) {
-      .main-layout {
-        flex-direction: row;
-        align-items: flex-start;
-      }
-      
-      .hero {
-        width: 45%;
-        height: 100vh;
-        position: sticky; /* Keeps hero in place while scrolling form */
-        top: 0;
-        margin: 0;
-        padding-bottom: 0;
-      }
-
-      .hero-mountains {
-        height: 30vh; /* Taller mountains for large screens */
-      }
-      
-      .hero-gradient-overlay {
-        height: 150px;
-      }
-
-      .wrapper {
-        width: 55%;
-        max-width: none; 
-        margin: 0; 
-        padding: 4rem 3rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        min-height: 100vh;
-      }
-
-      .card {
-        max-width: 550px;
-        margin: 0 auto;
-        width: 100%;
-        padding: 3rem 3.5rem;
-      }
+      .main-layout { flex-direction: row; align-items: flex-start; }
+      .hero { width: 45%; height: 100vh; position: sticky; top: 0; margin: 0; padding-bottom: 0; }
+      .hero-mountains { height: 30vh; }
+      .hero-gradient-overlay { height: 150px; }
+      .wrapper { width: 55%; max-width: none; margin: 0; padding: 4rem 3rem; display: flex; flex-direction: column; justify-content: center; min-height: 100vh; }
+      .card { max-width: 550px; margin: 0 auto; width: 100%; padding: 3rem 3.5rem; }
     }
   </style>
 </head>
@@ -600,6 +601,17 @@
         <h2>Pendaftaran Pendaki</h2>
         <p>Sila isi maklumat dengan lengkap & betul</p>
       </div>
+
+      <!-- ══ CLIMBERS LIST SECTION (COMPACT) ══ -->
+      <div class="climbers-section">
+        <h3 class="climbers-title">Senarai Pendaki Terkini</h3>
+        <ul class="climbers-list" id="climbers-list-container">
+          <li class="status-msg">Sedang memuatkan senarai...</li>
+        </ul>
+      </div>
+
+      <!-- ══ DIVIDER ══ -->
+      <div class="section-divider">Daftar Baru</div>
 
       <form name="google-sheet-form" novalidate>
 
@@ -636,8 +648,6 @@
           </div>
         </div>
 
-        <div class="section-divider">Lokasi</div>
-
         <!-- Alamat -->
         <div class="field">
           <label for="alamat">Kawasan / Daerah</label>
@@ -659,14 +669,6 @@
       <div class="security-note">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         Maklumat anda direkod dengan selamat
-      </div>
-
-      <!-- ══ NEW CLIMBERS LIST SECTION ══ -->
-      <div class="climbers-section">
-        <h3 class="climbers-title">Senarai Pendaki Terkini</h3>
-        <ol class="climbers-list" id="climbers-list-container">
-          <li>Sedang memuatkan senarai...</li>
-        </ol>
       </div>
 
     </div>
@@ -695,12 +697,17 @@
 
   // --- Fetch List of Climbers ---
   function fetchClimbersList() {
+    listContainer.classList.remove('grid-active');
+    listContainer.innerHTML = '<li class="status-msg">Sedang memuatkan senarai...</li>';
+
     fetch(SCRIPT_URL)
       .then(response => response.json())
       .then(data => {
         listContainer.innerHTML = ''; 
 
         if (data && data.length > 0) {
+          listContainer.classList.add('grid-active'); 
+          
           data.forEach(row => {
             const name = row['Nama Penuh'] || row.nama || row[0]; 
             if (name) {
@@ -710,12 +717,12 @@
             }
           });
         } else {
-          listContainer.innerHTML = '<li>Belum ada pendaftaran hari ini.</li>';
+          listContainer.innerHTML = '<li class="status-msg">Belum ada pendaftaran hari ini.</li>';
         }
       })
       .catch(error => {
         console.error('Error fetching list:', error);
-        listContainer.innerHTML = '<li>Senarai tidak dapat dimuatkan. Pastikan script Google menyokong fungsi GET.</li>';
+        listContainer.innerHTML = '<li class="status-msg">Senarai tidak dapat dimuatkan. Pastikan script Google menyokong fungsi GET.</li>';
       });
   }
 
@@ -779,6 +786,4 @@
 </script>
 </body>
 </html>
-
-
 
