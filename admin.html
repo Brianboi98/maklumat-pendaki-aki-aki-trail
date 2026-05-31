@@ -118,7 +118,7 @@
 
     #hikers-container {
       display: grid;
-      gap: 1rem;
+      gap: 1.5rem;
       max-width: 600px;
       margin: 0 auto;
       width: 100%;
@@ -128,7 +128,7 @@
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       border-radius: 16px;
-      padding: 1.2rem;
+      padding: 1.5rem;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
       animation: slideUp 0.4s ease-out both;
       position: relative;
@@ -137,36 +137,95 @@
     .card-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
+      align-items: center;
+      margin-bottom: 1.2rem;
       border-bottom: 1px dashed rgba(255,255,255,0.1);
       padding-bottom: 0.8rem;
     }
 
-    .hiker-name { font-size: 1.1rem; font-weight: 600; color: var(--gold-primary); padding-right: 10px;}
-    .hiker-time { font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 4px; }
+    .hiker-time { font-size: 0.75rem; color: var(--text-muted); }
+    .status-badge { font-size: 0.7rem; background: rgba(212,175,55,0.2); color: var(--gold-primary); padding: 0.2rem 0.6rem; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;}
     
-    .info-row { display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.9rem; }
-    .info-icon { width: 24px; opacity: 0.7; }
-    .info-value { font-weight: 500; }
+    /* ════ TEXT LABEL GROUPS ════ */
+    .info-group {
+      margin-bottom: 0.8rem;
+    }
 
+    .info-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .info-value-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      background: rgba(0,0,0,0.4);
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .info-value { font-weight: 500; font-size: 0.95rem; word-break: break-word; color: #fff; }
+    .text-gold { color: var(--gold-primary); font-size: 1.05rem; font-weight: 600; }
     a.phone-link { color: #79BFA1; text-decoration: none; font-weight: 600; }
     
-    .loading-msg { text-align: center; color: var(--text-muted); font-style: italic; margin-top: 2rem; }
+    .icon-copy {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+      padding: 0.1rem;
+    }
+    .icon-copy:hover { color: var(--gold-primary); transform: scale(1.1); }
 
-    /* DELETE BUTTON */
+    /* ════ ACTION BUTTONS ════ */
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+
+    .btn-action {
+      padding: 0.6rem;
+      border-radius: 8px;
+      font-family: 'Jost', sans-serif;
+      font-weight: 500;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    
+    .btn-copy-all {
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--gold-primary);
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+    .btn-copy-all:hover { background: rgba(212, 175, 55, 0.2); }
+
     .btn-delete {
       background: rgba(255, 75, 75, 0.1);
       color: var(--danger);
-      border: 1px solid rgba(255, 75, 75, 0.3);
-      border-radius: 8px;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.75rem;
-      font-family: 'Jost', sans-serif;
-      cursor: pointer;
-      transition: all 0.2s;
+      border-color: rgba(255, 75, 75, 0.3);
     }
     .btn-delete:hover { background: rgba(255, 75, 75, 0.25); }
+
+    .loading-msg { text-align: center; color: var(--text-muted); font-style: italic; margin-top: 2rem; }
 
     /* ════ DELETE MODAL ════ */
     .modal-overlay {
@@ -274,11 +333,48 @@
     let app, db, unsubscribe;
     let pendingDeleteId = null;
 
+    // Helper to safely escape HTML to prevent breaking HTML attributes
+    window.escapeHtml = function(unsafe) {
+      return (unsafe || '').toString()
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+    };
+
+    // Global copy function handling the logic safely
+    window.copyDetail = function(btnElement) {
+      const textToCopy = btnElement.getAttribute('data-clipboard');
+      const textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
+      document.body.appendChild(textArea);
+      textArea.select();
+      
+      try {
+        document.execCommand('copy');
+        // Visual feedback
+        const originalHTML = btnElement.innerHTML;
+        const isIcon = btnElement.classList.contains('icon-copy');
+        
+        btnElement.innerHTML = isIcon ? '✅' : '✅ Berjaya Disalin';
+        btnElement.style.color = '#4ade80'; // Green color for success
+        
+        setTimeout(() => {
+          btnElement.innerHTML = originalHTML;
+          btnElement.style.color = '';
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy', err);
+        alert('Gagal menyalin teks.');
+      }
+      
+      document.body.removeChild(textArea);
+    };
+
     // --- LOGIN LOGIC ---
     window.checkPassword = function() {
       const input = document.getElementById('password-input').value;
-      
-      // Check password (case-sensitive)
       if (input === ADMIN_PASSWORD) {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'flex';
@@ -299,7 +395,6 @@
 
       const container = document.getElementById('hikers-container');
       const countDisplay = document.getElementById('total-count');
-
       const hikersQuery = query(collection(db, "pendaki"), orderBy("timestamp", "desc"));
 
       unsubscribe = onSnapshot(hikersQuery, (snapshot) => {
@@ -324,32 +419,63 @@
             });
           }
 
+          const nama = data.name || 'Tiada Nama';
+          const ic = data.ic || '-';
+          const telefon = data.phone || '-';
+          const alamat = data.address || '-';
+
+          // Formatting for the "Copy All" text structure
+          const fullDetailsText = `Nama: ${nama}\nNo. IC/Passport: ${ic}\nNombor Telefon: ${telefon}\nAlamat:\n${alamat}`;
+
           const card = document.createElement('div');
           card.className = 'hiker-card';
           card.innerHTML = `
             <div class="card-header">
-              <div>
-                <div class="hiker-name">${data.name || 'Tiada Nama'}</div>
-                <span class="hiker-time">${timeString}</span>
+              <span class="status-badge">Rekod Pendaki</span>
+              <span class="hiker-time">🕒 ${timeString}</span>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Nama</span>
+              <div class="info-value-row">
+                <span class="info-value text-gold">${nama}</span>
+                <button class="icon-copy" onclick="copyDetail(this)" data-clipboard="${escapeHtml(nama)}" title="Salin Nama">📋</button>
               </div>
-              <button class="btn-delete" onclick="promptDelete('${docId}')">🗑️ Padam</button>
+            </div>
+
+            <div class="info-group">
+              <span class="info-label">No. IC/Passport:</span>
+              <div class="info-value-row">
+                <span class="info-value">${ic}</span>
+                <button class="icon-copy" onclick="copyDetail(this)" data-clipboard="${escapeHtml(ic)}" title="Salin No. IC">📋</button>
+              </div>
             </div>
             
-            <div class="info-row">
-              <span class="info-icon">🪪</span>
-              <span class="info-value">${data.ic || '-'}</span>
+            <div class="info-group">
+              <span class="info-label">Nombor Telefon:</span>
+              <div class="info-value-row">
+                <span class="info-value">
+                  <a href="tel:${telefon}" class="phone-link">${telefon}</a>
+                </span>
+                <button class="icon-copy" onclick="copyDetail(this)" data-clipboard="${escapeHtml(telefon)}" title="Salin Telefon">📋</button>
+              </div>
             </div>
             
-            <div class="info-row">
-              <span class="info-icon">📞</span>
-              <span class="info-value">
-                <a href="tel:${data.phone}" class="phone-link">${data.phone || '-'}</a>
-              </span>
+            <div class="info-group">
+              <span class="info-label">Alamat:</span>
+              <div class="info-value-row">
+                <span class="info-value">${alamat}</span>
+                <button class="icon-copy" onclick="copyDetail(this)" data-clipboard="${escapeHtml(alamat)}" title="Salin Alamat">📋</button>
+              </div>
             </div>
-            
-            <div class="info-row">
-              <span class="info-icon">📍</span>
-              <span class="info-value">${data.address || '-'}</span>
+
+            <div class="card-actions">
+              <button class="btn-action btn-copy-all" onclick="copyDetail(this)" data-clipboard="${escapeHtml(fullDetailsText)}">
+                📋 Salin Semua
+              </button>
+              <button class="btn-action btn-delete" onclick="promptDelete('${docId}')">
+                🗑️ Padam Rekod
+              </button>
             </div>
           `;
           container.appendChild(card);
@@ -393,4 +519,3 @@
   </script>
 </body>
 </html>
-
